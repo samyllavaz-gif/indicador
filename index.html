@@ -1,0 +1,476 @@
+
+<h2 class="sr-only">Painel de pendências de indicadores APS — importe planilhas do PEC para visualizar as pendências por paciente</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:0 0 2rem}
+
+.hero{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:2rem 2rem 1.75rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;top:-20px;right:-20px;opacity:0.06;pointer-events:none;font-size:140px;line-height:1;color:var(--color-text-primary)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:12px;padding:4px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:20px;background:var(--color-background-primary)}
+.hero-eyebrow i{font-size:13px}
+.hero h1{font-size:22px;font-weight:500;color:var(--color-text-primary);line-height:1.25;margin-bottom:8px}
+.hero p{font-size:13px;color:var(--color-text-secondary);line-height:1.6;max-width:480px;margin-bottom:1.5rem}
+
+.indicator-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;font-size:12px;font-weight:500;border:0.5px solid}
+.pill-g{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
+.pill-i{background:#EAF3DE;color:#27500A;border-color:#97C459}
+.pill-d{background:#FAEEDA;color:#633806;border-color:#EF9F27}
+.pill-h{background:#FCEBEB;color:#791F1F;border-color:#F09595}
+.pill-o{background:#F1EFE8;color:#444441;border-color:#B4B2A9}
+.pill-m{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
+.pill i{font-size:12px}
+
+.upload-zone{border:1.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:1.75rem;text-align:center;cursor:pointer;background:var(--color-background-primary);transition:border-color 0.15s,background 0.15s}
+.upload-zone:hover,.upload-zone.drag{border-color:#378ADD;background:#E6F1FB}
+.upload-zone:hover .uz-icon,.upload-zone.drag .uz-icon{color:#185FA5}
+.uz-icon{font-size:32px;color:var(--color-text-tertiary);display:block;margin-bottom:10px;transition:color 0.15s}
+.uz-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.uz-sub{font-size:12px;color:var(--color-text-tertiary);line-height:1.5}
+.uz-btn{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:7px 18px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;background:#185FA5;color:#E6F1FB;border:none;cursor:pointer;transition:background 0.15s}
+.uz-btn:hover{background:#0C447C}
+#file-input{display:none}
+
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1.25rem}
+.how-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px}
+.how-num{font-size:11px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.how-icon{font-size:22px;color:var(--color-text-secondary);margin-bottom:8px;display:block}
+.how-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.how-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:1rem 0 0.5rem}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 8px;border-radius:20px;font-size:12px;font-weight:500;border:0.5px solid;cursor:default}
+.chip-g{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
+.chip-i{background:#EAF3DE;color:#27500A;border-color:#97C459}
+.chip-d{background:#FAEEDA;color:#633806;border-color:#EF9F27}
+.chip-h{background:#FCEBEB;color:#791F1F;border-color:#F09595}
+.chip-o{background:#F1EFE8;color:#444441;border-color:#B4B2A9}
+.chip-m{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
+.chip .rm{cursor:pointer;font-size:15px;line-height:1;margin-left:2px;opacity:0.5}
+.chip .rm:hover{opacity:1}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+.stat-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px}
+.stat-card.s-total{border-left:3px solid #378ADD;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.stat-card.s-pend{border-left:3px solid #EF9F27;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.stat-card.s-crit{border-left:3px solid #E24B4A;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.stat-card.s-ok{border-left:3px solid #639922;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.stat-lbl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.stat-val{font-size:26px;font-weight:500;line-height:1}
+.v-blue{color:#185FA5}.v-pend{color:#BA7517}.v-crit{color:#A32D2D}.v-ok{color:#3B6D11}
+
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.filter-bar input,.filter-bar select{font-size:13px;height:34px;padding:0 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary)}
+.filter-bar input{width:210px}
+.fbtn{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 14px;font-size:13px;font-weight:500;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);cursor:pointer}
+.fbtn:hover{background:var(--color-background-secondary)}
+.fbtn.primary{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
+.fbtn.primary:hover{background:#B5D4F4}
+
+.tbl-wrap{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+col.cn{width:22%}col.ca{width:9%}col.ct{width:14%}col.ci{width:16%}col.cp{width:39%}
+thead tr{background:var(--color-background-secondary)}
+th{padding:9px 12px;text-align:left;font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;border-bottom:0.5px solid var(--color-border-tertiary);white-space:nowrap}
+td{padding:10px 12px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top;color:var(--color-text-primary);overflow:hidden;text-overflow:ellipsis}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--color-background-secondary)}
+.nm{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.muted{color:var(--color-text-secondary);font-size:12px;white-space:nowrap}
+.plist{display:flex;flex-direction:column;gap:4px}
+.ptag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:500;width:fit-content;white-space:normal;line-height:1.3}
+.ptag i{font-size:12px;flex-shrink:0}
+.ptag.red{background:#FCEBEB;color:#791F1F;border:0.5px solid #F7C1C1}
+.ptag.amber{background:#FAEEDA;color:#633806;border:0.5px solid #FAC775}
+.ptag.ok{background:#EAF3DE;color:#27500A;border:0.5px solid #C0DD97}
+.tbadge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500;border:0.5px solid;white-space:nowrap}
+.tbadge.g{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
+.tbadge.i{background:#EAF3DE;color:#27500A;border-color:#97C459}
+.tbadge.d{background:#FAEEDA;color:#633806;border-color:#EF9F27}
+.tbadge.h{background:#FCEBEB;color:#791F1F;border-color:#F09595}
+.tbadge.o{background:#F1EFE8;color:#444441;border-color:#B4B2A9}
+.tbadge.m{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
+.foot{font-size:12px;color:var(--color-text-tertiary);padding:8px 4px;text-align:right}
+.etag{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem;padding:5px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary)}
+.section-div{border-top:0.5px solid var(--color-border-tertiary);margin:1.5rem 0 1.25rem}
+.section-label{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:1rem}
+</style>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-bg" aria-hidden="true"><i class="ti ti-clipboard-heart"></i></div>
+
+    <div class="hero-eyebrow"><i class="ti ti-building-health" aria-hidden="true"></i>Atenção Primária à Saúde — Programa Previne Brasil</div>
+    <h1>Monitor de pendências<br>de indicadores APS</h1>
+    <p>Importe as planilhas de acompanhamento exportadas do PEC e visualize automaticamente as pendências de cada paciente, organizadas por boas práticas e gravidade.</p>
+
+    <div class="indicator-pills">
+      <span class="pill pill-g"><i class="ti ti-pregnant" aria-hidden="true"></i>Gestação e puerpério</span>
+      <span class="pill pill-i"><i class="ti ti-baby-carriage" aria-hidden="true"></i>Desenvolvimento infantil</span>
+      <span class="pill pill-d"><i class="ti ti-droplet" aria-hidden="true"></i>Diabetes</span>
+      <span class="pill pill-h"><i class="ti ti-heart" aria-hidden="true"></i>Hipertensão</span>
+      <span class="pill pill-o"><i class="ti ti-walk" aria-hidden="true"></i>Pessoa idosa</span>
+      <span class="pill pill-m"><i class="ti ti-gender-female" aria-hidden="true"></i>Saúde da mulher</span>
+    </div>
+
+    <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+      <i class="ti ti-file-import uz-icon" aria-hidden="true"></i>
+      <div class="uz-title">Arraste os arquivos CSV aqui ou clique para selecionar</div>
+      <div class="uz-sub">Aceita múltiplos arquivos de uma vez — o sistema identifica<br>automaticamente o tipo de cada planilha</div>
+      <button class="uz-btn" type="button"><i class="ti ti-upload" aria-hidden="true"></i>Selecionar arquivos</button>
+      <input type="file" id="file-input" accept=".csv" multiple>
+    </div>
+
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">Passo 1</div>
+        <i class="ti ti-file-export how-icon" aria-hidden="true"></i>
+        <div class="how-title">Exporte do PEC</div>
+        <div class="how-desc">No PEC, acesse Relatórios → Acompanhamento de condições de saúde e exporte o CSV de cada indicador.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">Passo 2</div>
+        <i class="ti ti-upload how-icon" aria-hidden="true"></i>
+        <div class="how-title">Importe aqui</div>
+        <div class="how-desc">Selecione um ou mais arquivos de uma vez. O sistema reconhece automaticamente Gestação, Diabetes, Hipertensão e mais.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">Passo 3</div>
+        <i class="ti ti-list-check how-icon" aria-hidden="true"></i>
+        <div class="how-title">Veja as pendências</div>
+        <div class="how-desc">Cada paciente aparece com suas pendências em vermelho (crítico) ou amarelo (atenção), conforme as notas metodológicas C2–C7.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chips" id="chips"></div>
+
+  <div id="panel" style="display:none">
+    <div id="etag" class="etag" style="display:none"><i class="ti ti-building-hospital" aria-hidden="true" style="font-size:14px"></i><span id="etag-txt"></span></div>
+
+    <div class="stat-grid">
+      <div class="stat-card s-total"><div class="stat-lbl">Total de pacientes</div><div class="stat-val v-blue" id="s1">0</div></div>
+      <div class="stat-card s-pend"><div class="stat-lbl">Com pendências</div><div class="stat-val v-pend" id="s2">0</div></div>
+      <div class="stat-card s-crit"><div class="stat-lbl">Pendências críticas</div><div class="stat-val v-crit" id="s3">0</div></div>
+      <div class="stat-card s-ok"><div class="stat-lbl">Em dia</div><div class="stat-val v-ok" id="s4">0</div></div>
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" id="search" placeholder="Buscar por nome..." oninput="renderTable()">
+      <select id="ftipo" onchange="renderTable()">
+        <option value="">Todos os indicadores</option>
+        <option value="gestacao">Gestação e puerpério</option>
+        <option value="infantil">Desenvolvimento infantil</option>
+        <option value="diabetes">Diabetes</option>
+        <option value="hipertensao">Hipertensão</option>
+        <option value="idoso">Pessoa idosa</option>
+        <option value="saude_mulher">Saúde da mulher</option>
+      </select>
+      <select id="fpend" onchange="renderTable()">
+        <option value="">Todas as situações</option>
+        <option value="1">Com pendências</option>
+        <option value="0">Em dia</option>
+      </select>
+      <select id="fsev" onchange="renderTable()">
+        <option value="">Qualquer gravidade</option>
+        <option value="red">Somente críticas</option>
+        <option value="amber">Somente atenção</option>
+      </select>
+      <button class="fbtn primary" onclick="exportCSV()"><i class="ti ti-download" aria-hidden="true"></i>Exportar CSV</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <colgroup><col class="cn"><col class="ca"><col class="ct"><col class="ci"><col class="cp"></colgroup>
+        <thead><tr><th>Paciente</th><th>Idade</th><th>Telefone</th><th>Indicador</th><th>Pendências</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="foot" id="foot"></div>
+  </div>
+
+</div>
+
+<script>
+const TIPOS={
+  gestacao:{label:'Gestação e puerpério',cls:'g',icon:'ti-pregnant'},
+  infantil:{label:'Desenv. infantil',cls:'i',icon:'ti-baby-carriage'},
+  diabetes:{label:'Diabetes',cls:'d',icon:'ti-droplet'},
+  hipertensao:{label:'Hipertensão',cls:'h',icon:'ti-heart'},
+  idoso:{label:'Pessoa idosa',cls:'o',icon:'ti-walk'},
+  saude_mulher:{label:'Saúde da mulher',cls:'m',icon:'ti-gender-female'},
+};
+let allRows=[],loadedFiles={};
+
+function detectTipo(lines){
+  for(const l of lines.slice(0,20)){
+    if(l.includes('Gestação e puerpério')||l.includes('Gestação'))return 'gestacao';
+    if(l.includes('Desenvolvimento infantil'))return 'infantil';
+    if(l.includes('Diabetes'))return 'diabetes';
+    if(l.includes('Hipertensão'))return 'hipertensao';
+    if(l.includes('Pessoa idosa')||l.includes('idosa'))return 'idoso';
+    if(l.includes('Saúde da mulher')||l.includes('saúde da mulher'))return 'saude_mulher';
+  }return null;
+}
+function getEquipe(lines){
+  for(const l of lines.slice(0,20)){
+    if(l.startsWith('Equipe')||l.includes('responsável')){const p=l.split(';');return p[1]?p[1].trim():'';}
+  }return '';
+}
+function parseCSV(text,tipo){
+  const lines=text.split('\n');
+  let hi=-1;
+  for(let i=0;i<lines.length;i++){if(lines[i].startsWith('Nome;')){hi=i;break;}}
+  if(hi<0)return[];
+  const cols=lines[hi].split(';').map(c=>c.trim());
+  return lines.slice(hi+1).filter(l=>l.trim()&&l.trim()!==';'&&l.split(';')[0]?.trim()).map(l=>{
+    const vals=l.split(';');const o={};
+    cols.forEach((c,j)=>o[c]=(vals[j]||'').replace(/"/g,'').trim());
+    o._tipo=tipo;return o;
+  });
+}
+function parseDMY(s){if(!s||s==='-')return null;const[d,m,y]=s.split('/');if(!d||!m||!y)return null;return new Date(+y,+m-1,+d);}
+function parseYMD(s){if(!s||s==='-')return null;const p=s.split('-');if(p.length<3)return null;return new Date(+p[0],+p[1]-1,+p[2]);}
+function daysAgo(d){if(!d)return null;return Math.floor((new Date()-d)/86400000);}
+
+function checkGestacao(r){
+  const p=[];
+  const ig=parseInt(r['IG (DUM) (semanas)'])||0;
+  const qa=parseInt(r['Quantidade de atendimentos no pré-natal'])||0;
+  const a12=parseInt(r['Quantidade de atendimentos até 12 semanas no pré-natal'])||0;
+  const qpa=parseInt(r['Quantidade de medições de pressão arterial'])||0;
+  const qph=parseInt(r['Quantidade de medições simultâneas de peso e altura'])||0;
+  const qvd=parseInt(r['Quantidade de visitas domiciliares no pré-natal'])||0;
+  const qvdpu=parseInt(r['Quantidade de visitas domiciliares no puerpério'])||0;
+  const qpu=parseInt(r['Quantidade de atendimentos no puerpério'])||0;
+  const dTpa=r['dTpa']||'-';
+  const ok=v=>v==='SIM'||v==='NAO_SE_APLICA';
+  const h1=r['Exame de HIV no primeiro trimestre'];
+  const s1=r['Exame de Sífilis no primeiro trimestre)']||r['Exame de Sífilis no primeiro trimestre'];
+  const b1=r['Exame de Hepatite B no primeiro trimestre'];
+  const c1=r['Exame de Hepatite C no primeiro trimestre'];
+  const h3=r['Exame de HIV no terceiro trimestre'];
+  const s3=r['Exame de Sifilis no terceiro trimestre'];
+  const qo=parseInt(r['Quantidade de atendimentos odontológicos no pré-natal'])||0;
+  const puPres=r['Última consulta de puerpério']&&r['Última consulta de puerpério']!=='-';
+  if(a12<1)p.push({t:'A — 1ª consulta: não realizada até a 12ª semana',s:'red'});
+  if(qa<7)p.push({t:`B — Consultas pré-natal: ${qa}/7`,s:qa>=5?'amber':'red'});
+  if(qpa<7)p.push({t:`C — Aferições de PA: ${qpa}/7`,s:qpa>=5?'amber':'red'});
+  if(qph<7)p.push({t:`D — Peso+altura simultâneos: ${qph}/7`,s:qph>=5?'amber':'red'});
+  if(qvd<3)p.push({t:`E — Visitas ACS pré-natal: ${qvd}/3`,s:qvd>=2?'amber':'red'});
+  if(ig>=20&&(dTpa==='-'||!dTpa))p.push({t:'F — Vacina dTpa não registrada (≥ 20 sem)',s:'red'});
+  else if(ig<20&&(dTpa==='-'||!dTpa))p.push({t:'F — Vacina dTpa: aguardando (< 20 sem)',s:'amber'});
+  const falt1=[];
+  if(!ok(h1))falt1.push('HIV');if(!ok(s1))falt1.push('Sífilis');if(!ok(b1))falt1.push('Hep.B');if(!ok(c1))falt1.push('Hep.C');
+  if(falt1.length)p.push({t:`G — Exames 1º tri pendentes: ${falt1.join(', ')}`,s:'red'});
+  if(ig>26){if(h3!=='SIM'&&h3!=='NAO_SE_APLICA')p.push({t:'H — HIV 3º trimestre: não realizado',s:'red'});if(s3!=='SIM'&&s3!=='NAO_SE_APLICA')p.push({t:'H — Sífilis 3º trimestre: não realizado',s:'red'});}
+  if(puPres&&qpu<1)p.push({t:'I — Consulta no puerpério: não realizada',s:'red'});
+  if(puPres&&qvdpu<1)p.push({t:'J — Visita ACS no puerpério: não realizada',s:'red'});
+  if(qo<1)p.push({t:'K — Atendimento odontológico: não registrado',s:'amber'});
+  return p;
+}
+function checkInfantil(r){
+  const p=[];
+  const id=r['Idade na primeira consulta']||'';const dias=parseInt(id)||999;
+  const dtP=parseDMY(r['Data da primeira consulta'])||parseYMD(r['Data da primeira consulta']);
+  const qc=parseInt(r['Quantidade de consultas até 24 meses'])||0;
+  const qph=parseInt(r['Quantidade de medições de peso/altura simultâneas até 24 meses'])||0;
+  const vd1=r['Data da primeira visita domiciliar'];const vd2=r['Data da segunda visita domiciliar'];
+  const penta=r['Difteria, Tétano, Pertusis, Hepatite B, Haemophilus Influenza B']||'';
+  const polio=r['Poliomielite']||'';const scr=r['Sarampo, Caxumba, Rubéola']||'';const pneumo=r['Pneumocócica']||'';
+  if(!dtP||dias>30)p.push({t:'A — 1ª consulta: após o 30º dia de vida',s:'red'});
+  if(qc<9)p.push({t:`B — Consultas até 24m: ${qc}/9`,s:qc>=7?'amber':'red'});
+  if(qph<9)p.push({t:`C — Peso+altura simultâneos: ${qph}/9`,s:qph>=7?'amber':'red'});
+  if(!vd1||vd1==='-')p.push({t:'D — 1ª visita ACS: não registrada (até 30 dias)',s:'red'});
+  if(!vd2||vd2==='-')p.push({t:'D — 2ª visita ACS: não registrada (até 6 meses)',s:'red'});
+  const d3=s=>s.includes('D1')&&s.includes('D2')&&s.includes('D3');
+  if(!d3(penta))p.push({t:'E — Vacina Penta: esquema incompleto',s:'red'});
+  if(!d3(polio))p.push({t:'E — Vacina Pólio (VIP): esquema incompleto',s:'red'});
+  if(!scr.includes('D1'))p.push({t:'E — Vacina SCR: sem registro',s:'red'});
+  else if(!scr.includes('D2'))p.push({t:'E — Vacina SCR: 2ª dose pendente',s:'amber'});
+  if(!pneumo.includes('D1'))p.push({t:'E — Vacina Pneumocócica: sem registro',s:'red'});
+  else if(!pneumo.includes('D2'))p.push({t:'E — Vacina Pneumo: 2ª dose pendente',s:'amber'});
+  return p;
+}
+function checkDiabetes(r){
+  const p=[];
+  const dtC=parseDMY(r['Data da última consulta']);
+  const dm=parseInt(r['Dias desde o último atendimento médico'])||9999;
+  const de=parseInt(r['Dias desde o último atendimento de enfermagem'])||9999;
+  const uc=dtC?daysAgo(dtC):Math.min(dm,de);
+  if(uc>180)p.push({t:`A — Última consulta: há ${Math.round(uc/30)} meses (máx 6m)`,s:'red'});
+  else if(uc>150)p.push({t:`A — Última consulta: há ${Math.round(uc/30)} meses`,s:'amber'});
+  const dtPA=parseDMY(r['Data da última medição de pressão arterial']);
+  if(!dtPA||daysAgo(dtPA)>180)p.push({t:'B — Aferição de PA: não registrada (últimos 6m)',s:'red'});
+  const dtPH=parseDMY(r['Data da ultima medição de peso e altura']);
+  if(!dtPH||daysAgo(dtPH)>365)p.push({t:'C — Peso+altura: não registrado (últimos 12m)',s:'red'});
+  const qvd=parseInt(r['Quantidade de visitas domiciliares'])||0;
+  if(qvd<2)p.push({t:`D — Visitas ACS: ${qvd}/2 (últimos 12m)`,s:qvd===1?'amber':'red'});
+  const hba=r['Hemoglobina glicada'];
+  const dtHba=parseDMY(r['Data da última avaliação de hemoglobina glicada'])||parseDMY(r['Data da última solicitação de hemoglobina glicada']);
+  if(!hba||hba==='-'||!dtHba||(dtHba&&daysAgo(dtHba)>365))p.push({t:'E — HbA1c: não solicitada/avaliada (últimos 12m)',s:'red'});
+  const dtPe=parseDMY(r['Data da avaliação dos pés']);
+  if(!dtPe||daysAgo(dtPe)>365)p.push({t:'F — Avaliação dos pés: não registrada (últimos 12m)',s:'red'});
+  return p;
+}
+function checkHipertensao(r){
+  const p=[];
+  const dtC=parseDMY(r['Data da última consulta']);
+  const dm=parseInt(r['Dias desde o último atendimento médico'])||9999;
+  const de=parseInt(r['Dias desde o último atendimento de enfermagem'])||9999;
+  const uc=dtC?daysAgo(dtC):Math.min(dm,de);
+  if(uc>180)p.push({t:`A — Última consulta: há ${Math.round(uc/30)} meses (máx 6m)`,s:'red'});
+  else if(uc>150)p.push({t:`A — Última consulta: há ${Math.round(uc/30)} meses`,s:'amber'});
+  const dtPA=parseDMY(r['Data da última medição de pressão arterial']);
+  if(!dtPA||daysAgo(dtPA)>180)p.push({t:'B — Aferição de PA: não registrada (últimos 6m)',s:'red'});
+  const dtPH=parseDMY(r['Data da ultima medição de peso e altura']);
+  if(!dtPH||daysAgo(dtPH)>365)p.push({t:'C — Peso+altura: não registrado (últimos 12m)',s:'red'});
+  const qvd=parseInt(r['Quantidade de visitas domiciliares'])||0;
+  if(qvd<2)p.push({t:`D — Visitas ACS: ${qvd}/2 (últimos 12m)`,s:qvd===1?'amber':'red'});
+  return p;
+}
+function checkIdoso(r){
+  const p=[];
+  const dm=parseInt(r['Dias desde o último atendimento médico'])||9999;
+  const de=parseInt(r['Dias desde o último atendimento de enfermagem'])||9999;
+  const uc=Math.min(dm,de);
+  if(uc>365)p.push({t:'A — Última consulta: há mais de 12 meses',s:'red'});
+  else if(uc>300)p.push({t:`A — Última consulta: há ${Math.round(uc/30)} meses`,s:'amber'});
+  const reg=parseInt(r['Registros de peso e altura simultâneos nos últimos 12 meses'])||0;
+  if(reg<1)p.push({t:'B — Peso+altura: não registrado (últimos 12m)',s:'red'});
+  const qvd=parseInt(r['Quantidade de visitas domiciliares'])||0;
+  if(qvd<2)p.push({t:`C — Visitas ACS: ${qvd}/2 (últimos 12m)`,s:qvd===1?'amber':'red'});
+  const inf=r['Influenza (últimos 12 meses)']||'-';
+  if(!inf||inf==='-'||inf.toLowerCase().includes('sem'))p.push({t:'D — Vacina influenza: não registrada (últimos 12m)',s:'red'});
+  return p;
+}
+function checkSaudeMulher(r){
+  const p=[];const anos=parseInt(r['Idade'])||0;
+  if(anos>=25&&anos<=64){
+    const dt=parseDMY(r['Exame de rastreamento de câncer de colo de útero data última solicitação'])||parseDMY(r['Exame de rastreamento de câncer de colo de útero data última avaliação']);
+    if(!dt||daysAgo(dt)>1095)p.push({t:'A — Rastreamento colo do útero: não realizado (últ. 36m)',s:'red'});
+    else if(daysAgo(dt)>900)p.push({t:`A — Rastreamento colo do útero: ${Math.round(daysAgo(dt)/30)}m atrás`,s:'amber'});
+  }
+  if(anos>=9&&anos<=14){const hpv=r['HPV']||'-';if(!hpv||hpv==='-')p.push({t:'B — Vacina HPV: não registrada (9–14 anos)',s:'red'});}
+  if(anos>=14&&anos<=69){
+    const dtS=parseDMY(r['Data da última consulta de saúde sexual e reprodutiva']);
+    if(!dtS||daysAgo(dtS)>365)p.push({t:'C — Atend. saúde sexual/reprodutiva: não registrado (últ.12m)',s:'red'});
+    else if(daysAgo(dtS)>300)p.push({t:`C — Atend. SSR: ${Math.round(daysAgo(dtS)/30)}m atrás`,s:'amber'});
+  }
+  if(anos>=50&&anos<=69){
+    const dtM=parseDMY(r['Exame de rastreamento de câncer de mama data Última solicitação'])||parseDMY(r['Exame de rastreamento de câncer de mama data Última realização'])||parseDMY(r['Exame de rastreamento de câncer de mama data Última avaliação']);
+    if(!dtM||daysAgo(dtM)>730)p.push({t:'D — Mamografia de rastreamento: não realizada (últimos 24m)',s:'red'});
+    else if(daysAgo(dtM)>600)p.push({t:`D — Mamografia: ${Math.round(daysAgo(dtM)/30)}m atrás`,s:'amber'});
+  }
+  return p;
+}
+function getPend(r){
+  switch(r._tipo){
+    case 'gestacao':return checkGestacao(r);case 'infantil':return checkInfantil(r);
+    case 'diabetes':return checkDiabetes(r);case 'hipertensao':return checkHipertensao(r);
+    case 'idoso':return checkIdoso(r);case 'saude_mulher':return checkSaudeMulher(r);
+    default:return[];
+  }
+}
+function getTel(r){return r['Telefone celular']&&r['Telefone celular']!=='-'?r['Telefone celular']:r['Telefone de contato']&&r['Telefone de contato']!=='-'?r['Telefone de contato']:r['Telefone residencial']&&r['Telefone residencial']!=='-'?r['Telefone residencial']:'-';}
+
+function renderChips(){
+  const el=document.getElementById('chips');el.innerHTML='';
+  Object.entries(loadedFiles).forEach(([tipo,fname])=>{
+    const t=TIPOS[tipo]||{label:tipo,cls:'o',icon:'ti-file'};
+    const d=document.createElement('div');d.className=`chip chip-${t.cls}`;
+    d.innerHTML=`<i class="ti ${t.icon}" aria-hidden="true" style="font-size:13px"></i>${t.label}<span class="rm" onclick="removeFile('${tipo}')" title="Remover">×</span>`;
+    el.appendChild(d);
+  });
+}
+function removeFile(tipo){
+  delete loadedFiles[tipo];allRows=allRows.filter(r=>r._tipo!==tipo);
+  renderChips();renderAll();
+}
+function getFiltered(){
+  const s=(document.getElementById('search').value||'').toLowerCase();
+  const ft=document.getElementById('ftipo').value;
+  const fp=document.getElementById('fpend').value;
+  const fs=document.getElementById('fsev').value;
+  return allRows.filter(r=>{
+    if(s&&!r['Nome'].toLowerCase().includes(s))return false;
+    if(ft&&r._tipo!==ft)return false;
+    const p=getPend(r);
+    if(fp==='1'&&p.length===0)return false;
+    if(fp==='0'&&p.length>0)return false;
+    if(fs&&!p.some(x=>x.s===fs))return false;
+    return true;
+  });
+}
+function renderStats(){
+  const t=allRows.length;const cp=allRows.filter(r=>getPend(r).length>0).length;
+  const cr=allRows.filter(r=>getPend(r).some(x=>x.s==='red')).length;
+  document.getElementById('s1').textContent=t;document.getElementById('s2').textContent=cp;
+  document.getElementById('s3').textContent=cr;document.getElementById('s4').textContent=t-cp;
+}
+function renderTable(){
+  renderStats();const rows=getFiltered();const tbody=document.getElementById('tbody');
+  if(rows.length===0){
+    tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:2.5rem;color:var(--color-text-tertiary)"><i class="ti ti-mood-empty" style="font-size:32px;display:block;margin-bottom:8px" aria-hidden="true"></i>Nenhum resultado encontrado.</td></tr>';
+    document.getElementById('foot').textContent='';return;
+  }
+  tbody.innerHTML=rows.map(r=>{
+    const ps=getPend(r);const t=TIPOS[r._tipo]||{label:r._tipo,cls:'o',icon:'ti-file'};
+    const ph=ps.length===0
+      ?'<span class="ptag ok"><i class="ti ti-circle-check" aria-hidden="true"></i>Em dia</span>'
+      :ps.map(p=>`<span class="ptag ${p.s}"><i class="ti ti-${p.s==='red'?'alert-circle':'alert-triangle'}" aria-hidden="true"></i>${p.t}</span>`).join('');
+    return `<tr><td class="nm" title="${r['Nome']}">${r['Nome']||'-'}</td><td class="muted">${r['Idade']||'-'}</td><td class="muted">${getTel(r)}</td><td><span class="tbadge ${t.cls}"><i class="ti ${t.icon}" aria-hidden="true" style="font-size:11px"></i>${t.label}</span></td><td><div class="plist">${ph}</div></td></tr>`;
+  }).join('');
+  document.getElementById('foot').textContent=`${rows.length} de ${allRows.length} paciente(s) exibidos`;
+}
+function renderAll(){
+  const has=allRows.length>0;
+  document.getElementById('panel').style.display=has?'block':'none';
+  if(has){renderStats();renderTable();}
+}
+async function processFile(file){
+  return new Promise(res=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const text=e.target.result;const lines=text.split('\n');
+      const tipo=detectTipo(lines);if(!tipo){res(null);return;}
+      const equipe=getEquipe(lines);
+      res({tipo,equipe,rows:parseCSV(text,tipo),fname:file.name});
+    };
+    reader.readAsText(file,'latin1');
+  });
+}
+document.getElementById('file-input').addEventListener('change',async function(){
+  for(const f of Array.from(this.files)){
+    const r=await processFile(f);
+    if(r){
+      loadedFiles[r.tipo]=r.fname;allRows=allRows.filter(x=>x._tipo!==r.tipo);allRows.push(...r.rows);
+      if(r.equipe){document.getElementById('etag-txt').textContent=r.equipe;document.getElementById('etag').style.display='inline-flex';}
+    }
+  }
+  renderChips();renderAll();this.value='';
+});
+const dz=document.getElementById('drop-zone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',async e=>{
+  e.preventDefault();dz.classList.remove('drag');
+  for(const f of Array.from(e.dataTransfer.files)){
+    const r=await processFile(f);
+    if(r){loadedFiles[r.tipo]=r.fname;allRows=allRows.filter(x=>x._tipo!==r.tipo);allRows.push(...r.rows);}
+  }
+  renderChips();renderAll();
+});
+function exportCSV(){
+  const rows=getFiltered();
+  const lines=['\uFEFFNome;Idade;Telefone;Indicador;Pendências'];
+  rows.forEach(r=>{
+    const ps=getPend(r).map(x=>x.t).join(' | ');const t=TIPOS[r._tipo]||{label:r._tipo};
+    lines.push(`"${r['Nome']}";"${r['Idade']}";"${getTel(r)}";"${t.label}";"${ps||'Em dia'}"`);
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='pendencias_indicadores.csv';a.click();URL.revokeObjectURL(url);
+}
+</script>
