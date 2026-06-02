@@ -59,6 +59,7 @@ a{text-decoration:none;color:inherit}
 .nav-item.ind-o.active{background:#4A235A}
 .nav-item.ind-m.active{background:#0E6655}
 .nav-item.dash.active{background:var(--brand-mid)}
+.nav-item.pac.active{background:#2C3E50}
 .nv-badge{margin-left:auto;font-size:10px;font-weight:600;border-radius:20px;padding:1px 7px;min-width:18px;text-align:center}
 .nv-badge.red{background:var(--red-m);color:white}
 .nv-badge.gray{background:rgba(255,255,255,.12);color:rgba(255,255,255,.6)}
@@ -292,6 +293,19 @@ textarea.fc{height:auto;padding:8px 10px;resize:vertical}
 .ig-bar{height:4px;border-radius:20px;background:var(--gray-100);overflow:hidden;margin-top:4px}
 .ig-fill{height:100%;background:var(--brand-mid);border-radius:20px;transition:width .4s}
 
+/* ── PACIENTES CONSOLIDADOS ── */
+.multi-ind-alert{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:#FEF9EC;border:1px solid #FAC775;border-radius:var(--r-md);margin-bottom:14px}
+.multi-ind-alert i{font-size:18px;color:var(--amber);flex-shrink:0;margin-top:1px}
+.multi-ind-alert-txt{flex:1}
+.multi-ind-alert-ttl{font-size:13px;font-weight:500;color:var(--amber);margin-bottom:5px}
+.multi-ind-links{display:flex;flex-wrap:wrap;gap:6px}
+.multi-ind-link{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:none;transition:opacity .15s}
+.multi-ind-link:hover{opacity:.8}
+.pac-ind-badges{display:flex;flex-wrap:wrap;gap:4px}
+.pac-pend-total{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.pac-row-name{font-weight:500;color:var(--gray-800)}
+.pac-row-sub{font-size:11px;color:var(--gray-400);margin-top:1px}
+
 /* ── RESPONSIVE ── */
 @media(max-width:1100px){.stats-row{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:800px){.app{grid-template-columns:1fr}.sidebar{display:none}.stats-row{grid-template-columns:repeat(2,1fr)}.dg{grid-template-columns:1fr}}
@@ -311,6 +325,7 @@ textarea.fc{height:auto;padding:8px 10px;resize:vertical}
   <nav class="sb-nav">
     <div class="nav-lbl">Visão geral</div>
     <button class="nav-item dash active" onclick="goView('dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard<span class="nv-badge gray" id="nb-total">0</span></button>
+    <button class="nav-item pac" onclick="goView('pacientes')"><i class="ti ti-users"></i>Todos os pacientes<span class="nv-badge gray" id="nb-pac">0</span></button>
 
     <div class="nav-lbl">Indicadores</div>
     <button class="nav-item ind-g" onclick="goInd('gestacao')"><i class="ti ti-pregnant"></i>Gestação e puerpério<span class="nv-badge gray" id="nb-g">0</span></button>
@@ -389,11 +404,51 @@ textarea.fc{height:auto;padding:8px 10px;resize:vertical}
       <div class="sc-pend" id="dp-m"></div>
     </div>
   </div>
-  <div class="sec-hdr"><div class="sec-title">Pacientes com pendências críticas</div><button class="btn btn-ghost btn-sm" onclick="openImport()"><i class="ti ti-file-import"></i>Importar PEC</button></div>
+  <div class="sec-hdr"><div class="sec-title">Pacientes com pendências críticas</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm" onclick="goView('pacientes')"><i class="ti ti-users"></i>Ver todos os pacientes</button>
+      <button class="btn btn-ghost btn-sm" onclick="openImport()"><i class="ti ti-file-import"></i>Importar PEC</button>
+    </div>
+  </div>
   <div class="tbl-card"><div class="tbl-wrap"><table>
     <thead><tr><th>Paciente</th><th>Indicador</th><th>Pendências críticas</th><th>Telefone</th><th></th></tr></thead>
     <tbody id="dash-tbody"></tbody>
   </table></div></div>
+</div>
+
+<!-- ── VIEW PACIENTES CONSOLIDADOS ── -->
+<div class="view" id="view-pacientes">
+  <div class="fbar">
+    <div class="srch"><i class="ti ti-search"></i><input type="text" id="pac-search" placeholder="Buscar nome, CPF ou CNS..." oninput="renderPacientes()"></div>
+    <select id="pac-f-sit" onchange="renderPacientes()">
+      <option value="">Toda situação</option>
+      <option value="1">Com pendências</option>
+      <option value="0">Em dia</option>
+    </select>
+    <select id="pac-f-multi" onchange="renderPacientes()">
+      <option value="">Todos</option>
+      <option value="multi">Em múltiplos indicadores</option>
+      <option value="single">Em apenas 1 indicador</option>
+    </select>
+    <select id="pac-f-ind" onchange="renderPacientes()">
+      <option value="">Qualquer indicador</option>
+      <option value="gestacao">Gestação</option>
+      <option value="infantil">Infantil</option>
+      <option value="diabetes">Diabetes</option>
+      <option value="hipertensao">Hipertensão</option>
+      <option value="idoso">Idoso</option>
+      <option value="saude_mulher">Saúde da mulher</option>
+    </select>
+  </div>
+  <div class="tbl-card"><div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Paciente</th><th>Telefone</th><th>Microárea</th>
+        <th>Indicadores</th><th>Total de pendências</th><th></th>
+      </tr></thead>
+      <tbody id="pac-tbody"></tbody>
+    </table>
+  </div><div class="tbl-foot" id="pac-foot"></div></div>
 </div>
 
 <!-- ── VIEW INDICADOR ── -->
@@ -688,12 +743,16 @@ function goView(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
   currentView=name;
-  const t={dashboard:'Dashboard',ind:'',patient:''};
+  const t={dashboard:'Dashboard',pacientes:'Pacientes',ind:'',patient:''};
   document.getElementById('pg-title').textContent=t[name]||name;
   document.getElementById('pg-badge').style.display='none';
   if(name==='dashboard'){
     document.querySelector('.nav-item.dash').classList.add('active');
     renderDashboard();
+  }
+  if(name==='pacientes'){
+    document.querySelector('.nav-item.pac').classList.add('active');
+    renderPacientes();
   }
   if(name==='ind') renderInd();
 }
@@ -757,6 +816,119 @@ function buildTableHead(ind){
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
+// PACIENTES CONSOLIDADOS
+// ══════════════════════════════════════════════════════════════════════════════
+function getConsolidatedPatients(){
+  // monta mapa CPF/CNS → {nome, cpf, cns, tel, microarea, indicadores:[{ind,pid,pends}]}
+  const map = new Map();
+  const key = p => (p.cpf && p.cpf !== '-' && p.cpf !== 'null') ? 'cpf:'+p.cpf.replace(/\D/g,'')
+    : (p.cns && p.cns !== '-' && p.cns !== 'null') ? 'cns:'+p.cns.replace(/\s/g,'')
+    : 'nome:'+p.nome.trim().toLowerCase();
+
+  Object.entries(DB).forEach(([ind, pats]) => {
+    pats.forEach(p => {
+      const k = key(p);
+      if (!map.has(k)) map.set(k, {
+        nome: p.nome, cpf: p.cpf||'-', cns: p.cns||'-',
+        tel: tel(p), microarea: p.microarea||'-', idade: p.idade||'',
+        indicadores: []
+      });
+      const entry = map.get(k);
+      // update nome/tel/idade se mais recente
+      if (p.nome && p.nome.length > entry.nome.length) entry.nome = p.nome;
+      if (tel(p) !== '-') entry.tel = tel(p);
+      if (p.idade) entry.idade = p.idade;
+      if (p.microarea && p.microarea !== '-') entry.microarea = p.microarea;
+      entry.indicadores.push({ ind, pid: p.id, pends: getPend(ind, p) });
+    });
+  });
+  return [...map.values()];
+}
+
+function renderPacientes(){
+  var s=(document.getElementById('pac-search').value||'').toLowerCase();
+  var fsi=document.getElementById('pac-f-sit').value;
+  var fmulti=document.getElementById('pac-f-multi').value;
+  var find=document.getElementById('pac-f-ind').value;
+  var all=getConsolidatedPatients();
+  var rows=all.filter(function(p){
+    if(s&&!p.nome.toLowerCase().includes(s)&&!(p.cpf||'').includes(s)&&!(p.cns||'').includes(s))return false;
+    var tot=p.indicadores.reduce(function(a,x){return a+x.pends.length},0);
+    if(fsi==='1'&&tot===0)return false;
+    if(fsi==='0'&&tot>0)return false;
+    if(fmulti==='multi'&&p.indicadores.length<2)return false;
+    if(fmulti==='single'&&p.indicadores.length>1)return false;
+    if(find&&!p.indicadores.some(function(x){return x.ind===find}))return false;
+    return true;
+  }).sort(function(a,b){
+    var pa=a.indicadores.reduce(function(a,x){return a+x.pends.filter(function(p){return p.s==='red'}).length},0);
+    var pb=b.indicadores.reduce(function(a,x){return a+x.pends.filter(function(p){return p.s==='red'}).length},0);
+    return pb-pa;
+  });
+  var tbody=document.getElementById('pac-tbody');
+  if(!rows.length){
+    var msg=all.length?'Nenhum paciente encontrado com esses filtros.':'Nenhum paciente cadastrado ainda.';
+    tbody.innerHTML='<tr><td colspan="6"><div class="empty"><i class="ti ti-users"></i><p>'+msg+'</p></div></td></tr>';
+    document.getElementById('pac-foot').textContent='';
+    return;
+  }
+  var html='';
+  rows.forEach(function(p){
+    var tot=p.indicadores.reduce(function(a,x){return a+x.pends.length},0);
+    var crit=p.indicadores.reduce(function(a,x){return a+x.pends.filter(function(pnd){return pnd.s==='red'}).length},0);
+    var warn=p.indicadores.reduce(function(a,x){return a+x.pends.filter(function(pnd){return pnd.s==='amber'}).length},0);
+    var badges='';
+    p.indicadores.forEach(function(x){
+      var m=IND_META[x.ind];
+      var c=x.pends.filter(function(pnd){return pnd.s==='red'}).length;
+      var w=x.pends.filter(function(pnd){return pnd.s==='amber'}).length;
+      var extra=c>0?' <b style="color:#C0392B">'+c+' crit.</b>':w>0?' <b style="color:#B7770D">'+w+' aten.</b>':' <b style="color:#1A7A4A">OK</b>';
+      badges+='<span class="multi-ind-link" style="background:'+m.bg+';color:'+m.dark+'" onclick="showPatient(''+x.ind+'',''+x.pid+'')"><i class="ti '+m.icon+'" style="font-size:11px"></i>'+m.label+extra+'</span>';
+    });
+    var pBg=crit?'#FBEAEA':tot>0?'#FEF9EC':'#EAF5EF';
+    var pFg=crit?'#C0392B':tot>0?'#B7770D':'#1A7A4A';
+    var pIco=crit?'ti-alert-circle':tot>0?'ti-alert-triangle':'ti-circle-check';
+    var pTxt=tot===0?'Em dia':tot+' pend.'+(crit?' ('+crit+' crit.)':'');
+    var eyeBtn=p.indicadores.length===1
+      ?'<button class="row-btn" onclick="showPatient(''+p.indicadores[0].ind+'',''+p.indicadores[0].pid+'')" title="Ver"><i class="ti ti-eye"></i></button>'
+      :'<span style="font-size:11px;color:#A09B90">'+p.indicadores.length+' ind.</span>';
+    var ma=(p.microarea||'-').replace(/"/g,'');
+    html+='<tr>';
+    html+='<td><div style="display:flex;align-items:center;gap:8px"><div class="pat-av" style="background:#EAF2F8;color:#1B4F72">'+initials(p.nome)+'</div><div><div class="pac-row-name">'+p.nome+'</div><div class="pac-row-sub">'+(p.idade||'')+'</div></div></div></td>';
+    html+='<td class="cell-muted" style="white-space:nowrap">'+(p.tel||'-')+'</td>';
+    html+='<td class="cell-muted">'+ma+'</td>';
+    html+='<td><div class="pac-ind-badges">'+badges+'</div></td>';
+    html+='<td><span class="pac-pend-total" style="background:'+pBg+';color:'+pFg+'"><i class="ti '+pIco+'"></i>'+pTxt+'</span></td>';
+    html+='<td>'+eyeBtn+'</td>';
+    html+='</tr>';
+  });
+  tbody.innerHTML=html;
+  var multi=all.filter(function(p){return p.indicadores.length>1}).length;
+  document.getElementById('pac-foot').textContent=rows.length+' de '+all.length+' paciente(s) únicos · '+multi+' em múltiplos indicadores';
+}
+
+// retorna lista de {ind, pid} onde o mesmo cpf/cns/nome aparece em OUTROS indicadores
+function getOtherIndicadores(ind, p){
+  const cpfKey = p.cpf && p.cpf !== '-' && p.cpf !== 'null' ? p.cpf.replace(/\D/g,'') : null;
+  const cnsKey = p.cns && p.cns !== '-' && p.cns !== 'null' ? p.cns.replace(/\s/g,'') : null;
+  const nomeKey = p.nome.trim().toLowerCase();
+  const others = [];
+  Object.entries(DB).forEach(([oInd, pats]) => {
+    if (oInd === ind) return;
+    pats.forEach(op => {
+      const oCpf = op.cpf ? op.cpf.replace(/\D/g,'') : null;
+      const oCns = op.cns ? op.cns.replace(/\s/g,'') : null;
+      const oNome = op.nome.trim().toLowerCase();
+      const match = (cpfKey && oCpf && cpfKey === oCpf)
+        || (cnsKey && oCns && cnsKey === oCns)
+        || (!cpfKey && !cnsKey && oNome === nomeKey);
+      if (match) others.push({ ind: oInd, pid: op.id, pends: getPend(oInd, op) });
+    });
+  });
+  return others;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
 // RENDER DASHBOARD
 // ══════════════════════════════════════════════════════════════════════════════
 function renderDashboard(){
@@ -774,6 +946,8 @@ function renderDashboard(){
     pats.filter(p=>getPend(ind,p).some(x=>x.s==='red')).forEach(p=>allCrit.push({ind,p}));
   });
   document.getElementById('nb-total').textContent=Object.values(DB).reduce((a,b)=>a+b.length,0);
+  const uniq=getConsolidatedPatients().length;
+  document.getElementById('nb-pac').textContent=uniq;
   // dash table
   const tbody=document.getElementById('dash-tbody');
   if(!allCrit.length){
@@ -791,7 +965,7 @@ function renderDashboard(){
         <div><div class="pat-name">${p.nome}</div><div class="pat-sub">${p.idade||''}</div></div>
       </div></td>
       <td><span class="badge" style="background:${m.bg};color:${m.dark}"><i class="ti ${m.icon}"></i>${m.label}</span></td>
-      <td><div style="display:flex;flex-direction:column;gap:2px">${pends.slice(0,3).map(pnd=>`<span class="ptag red"><i class="ti ti-alert-circle"></i>${pnd.cod} — ${pnd.t}</span>`).join('')}${pends.length>3?`<span style="font-size:11px;color:var(--gray-400)">+${pends.length-3} mais</span>`:''}</div></td>
+      <td><div style="display:flex;flex-direction:column;gap:2px">${pends.slice(0,3).map(function(pnd){return '<span class="ptag red"><i class="ti ti-alert-circle"></i>'+pnd.cod+' — '+pnd.t+'</span>'}).join('')+(pends.length>3?'<span style="font-size:11px;color:var(--gray-400)">+'+( pends.length-3)+' mais</span>':'')}</div></td>
       <td class="cell-muted">${tel(p)}</td>
       <td><button class="row-btn" onclick="showPatient('${ind}','${p.id}')"><i class="ti ti-eye"></i></button></td>
     </tr>`;
@@ -853,7 +1027,7 @@ function buildTableRow(ind,p){
     const risk=p.riscoGest;
     extra=`<td style="font-weight:500;white-space:nowrap">${ig}</td>
       <td class="cell-muted" style="white-space:nowrap">${p.dpp||'-'}</td>
-      <td>${risk?`<span class="badge ${risk==='Alto'?'badge-red':'badge-green'}">${risk}</span>`:'-'}</td>`;
+      <td>${risk?('<span class="badge '+(risk==='Alto'?'badge-red':'badge-green')+'">'+risk+'</span>'):'-'}</td>`;
   } else if(ind==='infantil'){
     const qc=p.qtdConsultas||0,qph=p.qtdPesoAltura||0;
     const vacOk=[p.vacPenta,p.vacPolio,p.vacSCR,p.vacPneumo].filter(v=>v&&v.includes('D1')&&v.includes('D2')).length;
@@ -874,7 +1048,7 @@ function buildTableRow(ind,p){
   } else if(ind==='idoso'){
     const inf=p.influenza;
     extra=`<td class="cell-muted" style="white-space:nowrap">${p.ultConsulta||'-'}</td>
-      <td>${inf&&inf!=='-'&&!inf.toLowerCase().includes('sem')?`<span class="badge badge-green"><i class="ti ti-check"></i>Registrada</span>`:`<span class="badge badge-red">Pendente</span>`}</td>`;
+      <td>${inf&&inf!=='-'&&!inf.toLowerCase().includes('sem')?'<span class="badge badge-green"><i class="ti ti-check"></i>Registrada</span>':'<span class="badge badge-red">Pendente</span>'}</td>`;
   } else if(ind==='saude_mulher'){
     extra=`<td class="cell-muted" style="font-size:11px;white-space:nowrap">${p.dtColpo||'-'}</td>
       <td class="cell-muted" style="font-size:11px;white-space:nowrap">${p.dtMamo||'-'}</td>`;
@@ -882,7 +1056,7 @@ function buildTableRow(ind,p){
 
   const pendTags=pends.length===0
     ?`<span class="ptag ok"><i class="ti ti-circle-check"></i>Em dia</span>`
-    :pends.slice(0,2).map(pnd=>`<span class="ptag ${pnd.s}"><i class="ti ti-alert-${pnd.s==='red'?'circle':'triangle'}"></i>${pnd.cod} — ${pnd.t}</span>`).join('')+(pends.length>2?`<span style="font-size:11px;color:var(--gray-400)">+${pends.length-2} mais</span>`:'');
+    :pends.slice(0,2).map(function(pnd){return '<span class="ptag '+pnd.s+'"><i class="ti ti-alert-'+(pnd.s==='red'?'circle':'triangle')+'"></i>'+pnd.cod+' — '+pnd.t+'</span>'}).join('')+(pends.length>2?'<span style="font-size:11px;color:var(--gray-400)">+'+(pends.length-2)+' mais</span>':'');
 
   return`<tr>
     ${baseLeft}${extra}
@@ -915,6 +1089,27 @@ function buildPatientDetail(ind,p,pends,m){
   const warnN=pends.filter(x=>x.s==='amber').length;
   const score=pends.length===0?100:Math.max(0,100-critN*25-warnN*10);
   const scoreCls=score>=75?'ok':score>=50?'warn':'crit';
+
+  // multi-indicador alert
+  var others = getOtherIndicadores(ind, p);
+  var multiAlert = '';
+  if(others.length > 0){
+    var otherBtns='';
+    others.forEach(function(o){
+      var om=IND_META[o.ind];
+      var oc=o.pends.filter(function(x){return x.s==='red'}).length;
+      var ow=o.pends.filter(function(x){return x.s==='amber'}).length;
+      var extra=oc>0?' <b style="color:#C0392B">'+oc+' crit.</b>':ow>0?' <b style="color:#B7770D">'+ow+' aten.</b>':' <b style="color:#1A7A4A">OK</b>';
+      otherBtns+='<button class="multi-ind-link" style="background:'+om.bg+';color:'+om.dark+'" onclick="showPatient(''+o.ind+'',''+o.pid+'')"><i class="ti '+om.icon+'" style="font-size:11px"></i>'+om.label+extra+'</button>';
+    });
+    multiAlert='<div class="multi-ind-alert"><i class="ti ti-link"></i><div class="multi-ind-alert-txt">'
+      +'<div class="multi-ind-alert-ttl">Este paciente está cadastrado em '+(others.length+1)+' indicadores</div>'
+      +'<div class="multi-ind-links">'
+      +'<span class="multi-ind-link" style="background:'+m.bg+';color:'+m.dark+';border:1.5px solid '+m.dark+'40"><i class="ti '+m.icon+'" style="font-size:11px"></i>'+m.label+' (atual)</span>'
+      +otherBtns
+      +'</div></div></div>';
+  }
+
 
   const pendHTML=`
     ${pends.length===0?`<div class="pi ok"><div class="pi-dot"></div><div class="pi-cod">✓</div><div class="pi-txt"><div class="pi-ttl">Todas as boas práticas cumpridas</div><div class="pi-sub">Paciente em dia com todas as boas práticas do indicador ${m.nota}</div></div></div>`:''}
@@ -953,6 +1148,7 @@ function buildPatientDetail(ind,p,pends,m){
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
       <button class="btn btn-ghost btn-sm" onclick="goInd('${ind}')"><i class="ti ti-arrow-left"></i>Voltar</button>
     </div>
+    ${multiAlert}
     <div class="pat-hdr">
       <div class="pat-av-lg" style="background:${m.bg};color:${m.dark}">${initials(p.nome)}</div>
       <div class="pat-hdr-info">
@@ -1261,9 +1457,9 @@ function buildModalForm(ind,data){
     const val=data?data[f.id]??'':'';
     const cls=`fg${f.full?' full':''}`;
     let inp='';
-    if(f.type==='select')inp=`<select class="fc" id="mf-${f.id}"><option value="">Selecionar</option>${(f.opts||[]).slice(1).map(o=>`<option${val===o?' selected':''}>${o}</option>`).join('')}</select>`;
+    if(f.type==='select'){var opts=(f.opts||[]).slice(1).map(function(o){return '<option'+(val===o?' selected':'')+'>'+o+'</option>';}).join('');inp='<select class="fc" id="mf-'+f.id+'"><option value="">Selecionar</option>'+opts+'</select>';}
     else if(f.type==='textarea')inp=`<textarea class="fc" id="mf-${f.id}" rows="3" placeholder="${f.ph||''}">${val}</textarea>`;
-    else inp=`<input class="fc" id="mf-${f.id}" type="${f.type}" placeholder="${f.ph||''}" ${f.step?`step="${f.step}"`:''}value="${val}">`;
+    else inp='<input class="fc" id="mf-'+f.id+'" type="'+f.type+'" placeholder="'+(f.ph||'')+'" '+(f.step?'step="'+f.step+'"':'')+' value="'+val+'">';
     return`<div class="${cls}"><label>${f.lbl}</label>${inp}</div>`;
   }).join('')}</div>`;
 
@@ -1334,6 +1530,8 @@ function updateBadges(){
     document.getElementById('nb-'+k).textContent=n;
   });
   document.getElementById('nb-total').textContent=total;
+  const uniq=getConsolidatedPatients().length;
+  document.getElementById('nb-pac').textContent=uniq;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1576,7 +1774,6 @@ function toast(msg,err=false){
 // ══════════════════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════════════════
-// try load on start
 try{const r=localStorage.getItem('apscare_db');if(r){const s=JSON.parse(r);Object.keys(DB).forEach(k=>{if(s[k])DB[k]=s[k];});const eq=localStorage.getItem('apscare_eq');if(eq)document.getElementById('eq-display').textContent=eq;updateBadges();}}catch(e){}
 renderDashboard();
 </script>
