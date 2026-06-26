@@ -45,6 +45,7 @@ a{text-decoration:none;color:inherit}
 .nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r-md);font-size:13px;color:rgba(255,255,255,.5);transition:all .15s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
 .nav-item i{font-size:17px;flex-shrink:0}.nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85)}.nav-item.active{color:white;font-weight:500}
 .nav-item.ind-g.active{background:#1A5276}.nav-item.ind-i.active{background:#1E8449}.nav-item.ind-d.active{background:#7D6608}.nav-item.ind-h.active{background:#922B21}.nav-item.ind-o.active{background:#4A235A}.nav-item.ind-m.active{background:#0E6655}.nav-item.dash.active{background:var(--brand-mid)}
+.nav-item.help.active{background:#6C3483}
 .nav-item.danger{color:#f5b4ac}.nav-item.danger:hover{background:rgba(231,76,60,.16);color:#fca5a5}
 .nv-badge{margin-left:auto;font-size:10px;font-weight:600;border-radius:20px;padding:1px 7px;min-width:18px;text-align:center}.nv-badge.red{background:var(--red-m);color:white}.nv-badge.gray{background:rgba(255,255,255,.12);color:rgba(255,255,255,.6)}
 .sb-footer{padding:12px 10px;border-top:1px solid rgba(255,255,255,.08)}.eq-card{background:rgba(255,255,255,.06);border-radius:var(--r-md);padding:10px 12px}.eq-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}.eq-name{font-size:12px;color:rgba(255,255,255,.65);line-height:1.4}
@@ -117,6 +118,64 @@ a{text-decoration:none;color:inherit}
 .tag-cat{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:20px;font-size:10px;font-weight:600;background:var(--purple-l);color:var(--purple)}
 .import-territory-note{background:var(--brand-light);border:1px solid #B5D4F4;color:var(--brand);border-radius:var(--r-md);padding:10px 12px;font-size:12px;margin-bottom:12px;display:flex;align-items:flex-start;gap:8px}
 .import-territory-note i{font-size:16px;margin-top:1px}
+
+/* ── FORA DO TERRITÓRIO ── */
+.outside-territory-card{background:var(--white);border:1.5px solid #F5B7B1;border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:16px}
+.outside-territory-hdr{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--red-l);cursor:pointer}
+.outside-territory-hdr:hover{background:#FAD7D2}
+.outside-territory-hdr i.ti-map-pin-off{font-size:22px;color:var(--red);flex-shrink:0}
+.outside-territory-ttl{font-weight:500;font-size:14px;color:var(--red)}
+.outside-territory-sub{font-size:11.5px;color:#A93226;margin-top:2px}
+.outside-territory-body{padding:14px 18px;background:var(--white)}
+#outside-territory-chevron{transition:transform .15s;color:var(--red)}
+#outside-territory-card.open #outside-territory-chevron{transform:rotate(180deg)}
+
+/* ── BUSCA GLOBAL DASHBOARD ── */
+.gsearch-wrap{position:relative;margin-bottom:22px}
+.gsearch-box{display:flex;align-items:center;gap:10px;background:var(--white);border:1.5px solid var(--gray-200);border-radius:var(--r-lg);padding:4px 6px 4px 16px;box-shadow:var(--sh-sm);transition:border-color .15s,box-shadow .15s}
+.gsearch-box:focus-within{border-color:var(--brand-mid);box-shadow:0 0 0 3px rgba(46,134,193,.12)}
+.gsearch-box i.ti-search{font-size:19px;color:var(--gray-400);flex-shrink:0}
+.gsearch-input{flex:1;border:none;outline:none;font-size:14.5px;height:42px;background:transparent;color:var(--gray-800)}
+.gsearch-clear{width:26px;height:26px;border-radius:50%;border:none;background:var(--gray-100);color:var(--gray-600);display:none;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.gsearch-clear.show{display:flex}
+.gsearch-hint{font-size:11px;color:var(--gray-400);padding:7px 16px 0}
+.gsearch-results{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--white);border:1px solid var(--gray-100);border-radius:var(--r-lg);box-shadow:var(--sh-lg);max-height:480px;overflow-y:auto;z-index:200;display:none}
+.gsearch-results.show{display:block}
+.gsearch-section{padding:8px 0}
+.gsearch-section-lbl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);padding:6px 16px 4px}
+.gsearch-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;transition:background .1s}
+.gsearch-item:hover{background:var(--gray-50)}
+.gsearch-item-info{flex:1;min-width:0}
+.gsearch-item-name{font-size:13.5px;font-weight:500;color:var(--gray-800);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gsearch-item-meta{font-size:11.5px;color:var(--gray-400);margin-top:1px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.gsearch-empty{padding:28px 16px;text-align:center;color:var(--gray-400);font-size:13px}
+.gsearch-empty i{font-size:32px;display:block;margin-bottom:8px;opacity:.4}
+.gsearch-divider{border-top:1px solid var(--gray-100)}
+
+/* ── COMO USAR ── */
+.help-hero{background:linear-gradient(135deg,#1B4F72,#2E86C1);border-radius:var(--r-xl);padding:36px 38px;color:white;margin-bottom:24px;position:relative;overflow:hidden}
+.help-hero::after{content:'';position:absolute;right:-40px;top:-40px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.06)}
+.help-hero::before{content:'';position:absolute;right:60px;bottom:-60px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.05)}
+.help-hero h1{font-family:var(--font-d);font-size:30px;color:white;margin-bottom:10px;position:relative;z-index:1}
+.help-hero p{font-size:14.5px;color:rgba(255,255,255,.85);max-width:580px;line-height:1.6;position:relative;z-index:1}
+.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.help-card{background:var(--white);border-radius:var(--r-lg);border:1px solid var(--gray-100);box-shadow:var(--sh-sm);padding:20px 22px}
+.help-card.full{grid-column:1/-1}
+.help-card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.help-card-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.help-card-ttl{font-family:var(--font-d);font-size:16.5px}
+.help-step{display:flex;gap:12px;margin-bottom:14px}
+.help-step:last-child{margin-bottom:0}
+.help-step-num{width:24px;height:24px;border-radius:50%;background:var(--brand-light);color:var(--brand);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.help-step-txt{font-size:13px;color:var(--gray-600);line-height:1.6}
+.help-step-txt strong{color:var(--gray-800)}
+.help-tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.help-faq-item{border-bottom:1px solid var(--gray-100);padding:14px 0}
+.help-faq-item:last-child{border-bottom:none;padding-bottom:0}
+.help-faq-q{font-size:13.5px;font-weight:500;color:var(--gray-800);margin-bottom:5px;display:flex;align-items:flex-start;gap:7px}
+.help-faq-q i{color:var(--brand-mid);font-size:15px;margin-top:1px;flex-shrink:0}
+.help-faq-a{font-size:13px;color:var(--gray-600);line-height:1.6;padding-left:22px}
+.help-cols{columns:1;font-size:13px;color:var(--gray-600);line-height:1.7}
 </style>
 </head>
 <body>
@@ -125,6 +184,7 @@ a{text-decoration:none;color:inherit}
   <div class="sb-brand"><div class="sb-logo"><div class="sb-icon"><i class="ti ti-stethoscope"></i></div><span class="sb-name">APSCare</span></div><div class="sb-sub">Gestão de Indicadores · APS</div></div>
   <nav class="sb-nav">
     <div class="nav-lbl">Visão geral</div>
+    <button class="nav-item help" onclick="goView('comousar')"><i class="ti ti-help-circle"></i>Como usar</button>
     <button class="nav-item dash active" onclick="goView('dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard<span class="nv-badge gray" id="nb-total">0</span></button>
     <div class="nav-lbl">Indicadores</div>
     <button class="nav-item ind-g" onclick="goInd('gestacao')"><i class="ti ti-pregnant"></i>Gestação e puerpério<span class="nv-badge gray" id="nb-g">0</span></button>
@@ -151,7 +211,101 @@ a{text-decoration:none;color:inherit}
 <main class="main">
 <header class="topbar"><div class="tb-left"><span class="pg-title" id="pg-title">Dashboard</span><span class="pg-badge" id="pg-badge" style="display:none"></span></div><div class="tb-actions"><button class="btn btn-outline btn-sm" onclick="openImport()"><i class="ti ti-file-import"></i>Importar PEC</button><button class="btn btn-primary btn-sm" id="btn-add" onclick="openAdd()"><i class="ti ti-plus"></i>Adicionar paciente</button></div></header>
 <div class="content">
+<div class="view" id="view-comousar">
+  <div class="help-hero">
+    <h1>Bem-vindo! 👋</h1>
+    <p>O APSCare reúne, em um único lugar, todos os indicadores de saúde da sua equipe — gestação, infantil, diabetes, hipertensão, idoso, saúde da mulher, Bolsa Família e o mapeamento das famílias do território. Esta página explica rapidamente como tirar o melhor proveito do sistema.</p>
+  </div>
+
+  <div class="help-grid">
+    <div class="help-card">
+      <div class="help-card-hdr"><div class="help-card-ico" style="background:var(--brand-light);color:var(--brand)"><i class="ti ti-file-import"></i></div><div class="help-card-ttl">1. Importe suas planilhas do PEC</div></div>
+      <div class="help-step"><div class="help-step-num">1</div><div class="help-step-txt">No e-SUS PEC, vá em <strong>Relatórios → Acompanhamento de condições de saúde</strong> e exporte o CSV de cada indicador (Gestação, Diabetes, Hipertensão, Idoso, Infantil, Saúde da Mulher).</div></div>
+      <div class="help-step"><div class="help-step-num">2</div><div class="help-step-txt">Clique em <strong>"Importar CSV do PEC"</strong> na barra lateral — o sistema reconhece automaticamente qual indicador é cada arquivo.</div></div>
+      <div class="help-step"><div class="help-step-num">3</div><div class="help-step-txt">Para a visão de território, importe também a <strong>planilha Geral</strong> e a <strong>planilha de Território</strong> (relatório de cadastro territorial/domiciliar).</div></div>
+    </div>
+
+    <div class="help-card">
+      <div class="help-card-hdr"><div class="help-card-ico" style="background:var(--green-l);color:var(--green)"><i class="ti ti-device-floppy"></i></div><div class="help-card-ttl">2. Salve seus dados</div></div>
+      <div class="help-step"><div class="help-step-num">1</div><div class="help-step-txt">Os dados ficam guardados <strong>somente neste computador e neste navegador</strong>. Não há nuvem nem servidor — tudo roda localmente.</div></div>
+      <div class="help-step"><div class="help-step-num">2</div><div class="help-step-txt">Clique em <strong>"Salvar dados locais"</strong> sempre que terminar de importar ou editar algo importante.</div></div>
+      <div class="help-step"><div class="help-step-num">3</div><div class="help-step-txt">Ao reabrir o sistema, use <strong>"Carregar dados salvos"</strong> para recuperar tudo de onde parou.</div></div>
+    </div>
+
+    <div class="help-card">
+      <div class="help-card-hdr"><div class="help-card-ico" style="background:#FEF9EC;color:#B7770D"><i class="ti ti-search"></i></div><div class="help-card-ttl">3. Use a busca do Dashboard</div></div>
+      <div class="help-step"><div class="help-step-num">1</div><div class="help-step-txt">Na tela inicial, digite o <strong>nome, CPF ou CNS</strong> de qualquer paciente na barra de busca.</div></div>
+      <div class="help-step"><div class="help-step-num">2</div><div class="help-step-txt">O resultado aparece já separado por origem: indicadores de saúde, Bolsa Família, famílias/domicílio ou pacientes não vinculados.</div></div>
+      <div class="help-step"><div class="help-step-num">3</div><div class="help-step-txt">Clique em qualquer resultado para abrir direto o detalhe da pessoa ou a aba correspondente.</div></div>
+    </div>
+
+    <div class="help-card">
+      <div class="help-card-hdr"><div class="help-card-ico" style="background:var(--purple-l);color:var(--purple)"><i class="ti ti-affiliate"></i></div><div class="help-card-ttl">4. Explore Território e Famílias</div></div>
+      <div class="help-step"><div class="help-step-num">1</div><div class="help-step-txt"><strong>Não vinculados</strong> mostra quem está na planilha Geral mas não aparece em nenhum indicador — útil para identificar quem precisa de captação.</div></div>
+      <div class="help-step"><div class="help-step-num">2</div><div class="help-step-txt"><strong>Bolsa Família</strong> cruza os beneficiários com as condicionalidades de saúde (pré-natal, vacinação, acompanhamento nutricional).</div></div>
+      <div class="help-step"><div class="help-step-num">3</div><div class="help-step-txt"><strong>Famílias/Ecomapa</strong> agrupa todo mundo por endereço — clique num domicílio para ver o ecomapa de cada morador com suas pendências.</div></div>
+    </div>
+
+    <div class="help-card full">
+      <div class="help-card-hdr"><div class="help-card-ico" style="background:var(--red-l);color:var(--red)"><i class="ti ti-list-check"></i></div><div class="help-card-ttl">Indicadores cobertos</div></div>
+      <div class="help-tag-row">
+        <span class="badge" style="background:#EAF2F8;color:#1A5276"><i class="ti ti-pregnant"></i>C3 — Gestação e puerpério</span>
+        <span class="badge" style="background:#EAF5EF;color:#1E8449"><i class="ti ti-baby-carriage"></i>C2 — Desenvolvimento infantil</span>
+        <span class="badge" style="background:#FEF9EC;color:#7D6608"><i class="ti ti-droplet"></i>C4 — Diabetes</span>
+        <span class="badge" style="background:#FBEAEA;color:#922B21"><i class="ti ti-heart"></i>C5 — Hipertensão</span>
+        <span class="badge" style="background:#F5EEF8;color:#6C3483"><i class="ti ti-walk"></i>C6 — Pessoa idosa</span>
+        <span class="badge" style="background:#E8F8F5;color:#0E6655"><i class="ti ti-gender-female"></i>C7 — Saúde da mulher</span>
+        <span class="badge" style="background:#D4EFDF;color:#1E8449"><i class="ti ti-hand-heart"></i>Bolsa Família</span>
+        <span class="badge" style="background:#D1F2EB;color:#117864"><i class="ti ti-affiliate"></i>Famílias / Ecomapa</span>
+      </div>
+      <div style="font-size:12px;color:var(--gray-400);margin-top:12px;line-height:1.6">As pendências de cada indicador seguem as Notas Metodológicas C2–C7 do Ministério da Saúde (Previne Brasil/SAPS). Pacientes em mais de um indicador são identificados automaticamente por CPF, CNS ou nome.</div>
+    </div>
+
+    <div class="help-card full">
+      <div class="help-card-hdr"><div class="help-card-ico" style="background:var(--gray-100);color:var(--gray-600)"><i class="ti ti-message-question"></i></div><div class="help-card-ttl">Perguntas frequentes</div></div>
+
+      <div class="help-faq-item">
+        <div class="help-faq-q"><i class="ti ti-help-circle"></i>Meus dados ficam salvos na internet?</div>
+        <div class="help-faq-a">Não. O APSCare funciona inteiramente no navegador deste computador (armazenamento local). Nada é enviado para a internet. Por isso é importante clicar em "Salvar dados locais" e, de tempos em tempos, exportar um relatório como backup.</div>
+      </div>
+
+      <div class="help-faq-item">
+        <div class="help-faq-q"><i class="ti ti-help-circle"></i>Posso adicionar um paciente manualmente, sem importar CSV?</div>
+        <div class="help-faq-a">Sim. Clique em "Adicionar paciente" no topo da tela, escolha o indicador e preencha os dados pessoais e clínicos. Você também pode editar qualquer paciente já importado clicando no ícone de lápis.</div>
+      </div>
+
+      <div class="help-faq-item">
+        <div class="help-faq-q"><i class="ti ti-help-circle"></i>O que significam as pendências vermelhas e amarelas?</div>
+        <div class="help-faq-a"><strong style="color:var(--red)">Vermelho (crítico)</strong> indica uma boa prática não cumprida dentro do prazo definido pela Nota Metodológica. <strong style="color:var(--amber)">Amarelo (atenção)</strong> indica que o prazo está se aproximando ou foi cumprido parcialmente.</div>
+      </div>
+
+      <div class="help-faq-item">
+        <div class="help-faq-q"><i class="ti ti-help-circle"></i>Importei uma planilha errada ou quero recomeçar. Como limpo os dados?</div>
+        <div class="help-faq-a">Na barra lateral, clique em "Limpar dados". Você pode escolher limpar apenas um indicador específico, a planilha Geral, o Território, ou tudo de uma vez. Por segurança, é preciso digitar "LIMPAR" para confirmar.</div>
+      </div>
+
+      <div class="help-faq-item">
+        <div class="help-faq-q"><i class="ti ti-help-circle"></i>Um paciente aparece em mais de um indicador. Isso é normal?</div>
+        <div class="help-faq-a">Sim — é bem comum, por exemplo, alguém ser hipertenso e diabético ao mesmo tempo. O sistema identifica automaticamente esses casos (por CPF, CNS ou nome) e mostra um aviso no topo da tela de detalhe do paciente, com atalhos para ver as pendências em cada indicador.</div>
+      </div>
+
+      <div class="help-faq-item">
+        <div class="help-faq-q"><i class="ti ti-help-circle"></i>Como funciona o cálculo das condicionalidades do Bolsa Família?</div>
+        <div class="help-faq-a">O sistema identifica os beneficiários pela coluna "Beneficiário do programa Bolsa Família" da planilha Geral, separa por grupo (crianças menores de 7 anos, mulheres de 14 a 44 anos e gestantes) e cruza com os indicadores de vacinação, acompanhamento nutricional e pré-natal já importados.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="view active" id="view-dashboard">
+  <div class="gsearch-wrap">
+    <div class="gsearch-box">
+      <i class="ti ti-search"></i>
+      <input type="text" class="gsearch-input" id="gsearch-input" placeholder="Buscar paciente por nome, CPF ou CNS — em todos os indicadores, famílias e Bolsa Família..." autocomplete="off" oninput="renderGlobalSearch()" onfocus="renderGlobalSearch()">
+      <button class="gsearch-clear" id="gsearch-clear" onclick="clearGlobalSearch()"><i class="ti ti-x" style="font-size:14px"></i></button>
+    </div>
+    <div class="gsearch-results" id="gsearch-results"></div>
+  </div>
   <div class="stats-row">
     <div class="stat-card g" onclick="goInd('gestacao')"><div class="sc-icon" style="background:#EAF2F8;color:#2E86C1"><i class="ti ti-pregnant"></i></div><div class="sc-val" id="dc-g">0</div><div class="sc-lbl">Gestação</div><div class="sc-pend" id="dp-g"></div></div>
     <div class="stat-card i" onclick="goInd('infantil')"><div class="sc-icon" style="background:#EAF5EF;color:#27AE60"><i class="ti ti-baby-carriage"></i></div><div class="sc-val" id="dc-i">0</div><div class="sc-lbl">Infantil</div><div class="sc-pend" id="dp-i"></div></div>
@@ -239,12 +393,33 @@ a{text-decoration:none;color:inherit}
     <div class="ind-stats" style="--c:#117864">
       <div class="ind-stat"><div class="ind-stat-val" id="fam-total-stat">0</div><div class="ind-stat-lbl">Domicílios</div></div>
       <div class="ind-stat"><div class="ind-stat-val" id="fam-empty-stat" style="color:#9B59B6">0</div><div class="ind-stat-lbl">Vazios</div></div>
+      <div class="ind-stat" id="fam-outside-stat-wrap" style="display:none"><div class="ind-stat-val" id="fam-outside-stat" style="color:#E74C3C">0</div><div class="ind-stat-lbl">Fora do território</div></div>
     </div>
     <button class="btn btn-outline btn-sm" style="margin-left:12px" onclick="openImportTerritorio()"><i class="ti ti-map-2"></i>Importar Território</button>
   </div>
   <div class="import-territory-note" id="territory-note" style="display:none">
     <i class="ti ti-info-circle"></i>
     <div>Você ainda não importou a planilha de <strong>Território</strong>. Sem ela, as famílias são agrupadas apenas pelo endereço da planilha Geral — composição familiar, vínculo de parentesco e responsável pelo domicílio ficam mais completos depois de importar o Território.</div>
+  </div>
+  <div class="outside-territory-card" id="outside-territory-card" style="display:none">
+    <div class="outside-territory-hdr" onclick="toggleOutsideTerritory()">
+      <i class="ti ti-map-pin-off"></i>
+      <div style="flex:1">
+        <div class="outside-territory-ttl">Pessoas da planilha Geral não encontradas no Território</div>
+        <div class="outside-territory-sub" id="outside-territory-sub">0 pessoa(s) sem domicílio cadastrado no Território — podem precisar de atualização cadastral</div>
+      </div>
+      <span class="badge badge-red" id="outside-territory-count">0</span>
+      <i class="ti ti-chevron-down house-chevron" id="outside-territory-chevron"></i>
+    </div>
+    <div class="outside-territory-body" id="outside-territory-body" style="display:none">
+      <div class="fbar" style="margin-bottom:10px">
+        <div class="srch"><i class="ti ti-search"></i><input type="text" id="outside-territory-search" placeholder="Buscar nome..." oninput="renderOutsideTerritory()"></div>
+      </div>
+      <div class="tbl-card"><div class="tbl-wrap"><table>
+        <thead><tr><th>Paciente</th><th>Idade</th><th>Sexo</th><th>Telefone</th><th>Microárea</th><th>Endereço (Geral)</th></tr></thead>
+        <tbody id="outside-territory-tbody"></tbody>
+      </table></div></div>
+    </div>
   </div>
   <div class="fbar">
     <div class="srch"><i class="ti ti-search"></i><input type="text" id="fam-search" placeholder="Buscar por endereço ou nome..." oninput="renderFamilias()"></div>
@@ -360,7 +535,7 @@ function getPend(ind,p){return({gestacao:pendGestacao,infantil:pendInfantil,diab
 function classPA(s){if(!s||s==='-')return{cls:'none',lbl:'Sem registro'};const m=String(s).match(/(\d+)\/(\d+)/);if(!m)return{cls:'none',lbl:s};const sy=+m[1],di=+m[2];if(sy>=180||di>=120)return{cls:'crit',lbl:'Crise hipertensiva'};if(sy>=160||di>=100)return{cls:'crit',lbl:'HAS grau III'};if(sy>=140||di>=90)return{cls:'warn',lbl:'HAS acima do alvo'};if(sy>=130||di>=85)return{cls:'warn',lbl:'Levemente elevada'};return{cls:'ok',lbl:'PA dentro do alvo'};}
 function calcIMC(peso,alt){if(!peso||!alt||alt<50)return null;const h=alt/100;return+(peso/(h*h)).toFixed(1);}
 function classIMC(v){if(!v)return null;if(v<18.5)return{lbl:'Abaixo do peso',cls:'warn'};if(v<25)return{lbl:'Peso normal',cls:'ok'};if(v<30)return{lbl:'Sobrepeso',cls:'warn'};if(v<35)return{lbl:'Obesidade grau I',cls:'crit'};if(v<40)return{lbl:'Obesidade grau II',cls:'crit'};return{lbl:'Obesidade grau III',cls:'crit'};}
-function goView(name){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('view-'+name)?.classList.add('active');currentView=name;document.getElementById('pg-title').textContent={dashboard:'Dashboard',ind:'',patient:'',naovinculados:'Não vinculados',bolsafamilia:'Bolsa Família',familias:'Famílias / Ecomapa'}[name]||name;document.getElementById('pg-badge').style.display='none';if(name==='dashboard'){document.querySelector('.nav-item.dash')?.classList.add('active');document.getElementById('btn-add').onclick=()=>openAdd(currentInd||'hipertensao');renderDashboard();}if(name==='ind')renderInd();if(name==='naovinculados'){document.querySelector('.nav-item.nv')?.classList.add('active');renderNaoVinculados();}if(name==='bolsafamilia'){document.querySelector('.nav-item.bf')?.classList.add('active');renderBolsaFamilia();}if(name==='familias'){document.querySelector('.nav-item.fam')?.classList.add('active');renderFamilias();}}
+function goView(name){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('view-'+name)?.classList.add('active');currentView=name;document.getElementById('pg-title').textContent={dashboard:'Dashboard',ind:'',patient:'',naovinculados:'Não vinculados',bolsafamilia:'Bolsa Família',familias:'Famílias / Ecomapa',comousar:'Como usar'}[name]||name;document.getElementById('pg-badge').style.display='none';if(name==='dashboard'){document.querySelector('.nav-item.dash')?.classList.add('active');document.getElementById('btn-add').onclick=()=>openAdd(currentInd||'hipertensao');renderDashboard();}if(name==='comousar'){document.querySelector('.nav-item.help')?.classList.add('active');}if(name==='ind')renderInd();if(name==='naovinculados'){document.querySelector('.nav-item.nv')?.classList.add('active');renderNaoVinculados();}if(name==='bolsafamilia'){document.querySelector('.nav-item.bf')?.classList.add('active');renderBolsaFamilia();}if(name==='familias'){document.querySelector('.nav-item.fam')?.classList.add('active');renderFamilias();}}
 function goInd(ind){currentInd=ind;const m=IND_META[ind];document.getElementById('pg-title').textContent=m.label;const pb=document.getElementById('pg-badge');pb.textContent='Nota '+m.nota;pb.style.display='inline-block';pb.style.background=m.bg;pb.style.color=m.dark;document.getElementById('btn-add').onclick=()=>openAdd(ind);document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelector(`.nav-item[onclick*="${ind}"]`)?.classList.add('active');const pats=DB[ind],total=pats.length,pend=pats.filter(p=>getPend(ind,p).length>0).length,crit=pats.filter(p=>getPend(ind,p).some(x=>x.s==='red')).length;document.getElementById('ind-hdr').innerHTML=`<div class="ind-icon" style="background:${m.bg};color:${m.color}"><i class="ti ${m.icon}"></i></div><div><div class="ind-name">${m.label}</div><div class="ind-desc">Indicador ${m.nota} · Nota Metodológica SAPS/MS</div></div><div class="ind-stats" style="--c:${m.color}"><div class="ind-stat"><div class="ind-stat-val">${total}</div><div class="ind-stat-lbl">Total</div></div><div class="ind-stat"><div class="ind-stat-val" style="color:${pend>0?'#D4AC0D':'#27AE60'}">${pend}</div><div class="ind-stat-lbl">C/ pend.</div></div><div class="ind-stat"><div class="ind-stat-val" style="color:${crit>0?'#E74C3C':'#27AE60'}">${crit}</div><div class="ind-stat-lbl">Críticos</div></div></div><button class="btn btn-outline btn-sm" style="margin-left:12px" onclick="openAdd('${ind}')"><i class="ti ti-plus"></i>Adicionar</button>`;const areas=[...new Set(pats.map(p=>(p.microarea||'').replace(/"/g,'').trim()).filter(Boolean))].sort();const sel=document.getElementById('ind-f-area');const cur=sel.value;sel.innerHTML='<option value="">Todas as microáreas</option>'+areas.map(a=>`<option value="${esc(a)}">Microárea ${esc(a)}</option>`).join('');sel.value=cur;document.getElementById('ind-thead-tr').innerHTML=buildTableHead(ind);document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('view-ind').classList.add('active');currentView='ind';updatePendFilterOptions(ind);renderInd();}
 function buildTableHead(ind){const base='<th>Paciente</th><th>Idade</th><th>Telefone</th>';const ends='<th>Pendências</th><th></th>';const extras={gestacao:'<th>IG</th><th>DPP</th><th>Risco</th>',infantil:'<th>Consultas</th><th>Vacinas</th>',diabetes:'<th>Última PA</th><th>Última consulta</th><th>HbA1c</th>',hipertensao:'<th>Última PA</th><th>Última consulta</th><th>Visitas ACS</th>',idoso:'<th>Última consulta</th><th>Influenza</th>',saude_mulher:'<th>Colpocitológico</th><th>Mamografia</th>'};return base+(extras[ind]||'')+ends;}
 function renderDashboard(){let allCrit=[];Object.entries(DB).forEach(([ind,pats])=>{const total=pats.length,pend=pats.filter(p=>getPend(ind,p).length>0).length,crit=pats.filter(p=>getPend(ind,p).some(x=>x.s==='red')).length;const key={gestacao:'g',infantil:'i',diabetes:'d',hipertensao:'h',idoso:'o',saude_mulher:'m'}[ind];document.getElementById('dc-'+key).textContent=total;document.getElementById('dp-'+key).innerHTML=pend>0?`<span style="color:${crit>0?'#E74C3C':'#D4AC0D'};font-weight:500">${pend} c/ pend.</span>`:'<span style="color:#27AE60">Todos em dia</span>';document.getElementById('nb-'+key).textContent=total;pats.filter(p=>getPend(ind,p).some(x=>x.s==='red')).forEach(p=>allCrit.push({ind,p}));});document.getElementById('nb-total').textContent=Object.values(DB).reduce((a,b)=>a+b.length,0);const tbody=document.getElementById('dash-tbody');if(!allCrit.length){tbody.innerHTML=`<tr><td colspan="5"><div class="empty"><i class="ti ti-mood-happy"></i><p>Nenhuma pendência crítica no momento!</p></div></td></tr>`;return;}allCrit=allCrit.sort((a,b)=>getPend(b.ind,b.p).filter(x=>x.s==='red').length-getPend(a.ind,a.p).filter(x=>x.s==='red').length).slice(0,12);tbody.innerHTML=allCrit.map(({ind,p})=>{const m=IND_META[ind],pends=getPend(ind,p).filter(x=>x.s==='red');return`<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="pat-av" style="background:${m.bg};color:${m.dark}">${initials(p.nome)}</div><div><div class="pat-name">${esc(p.nome)}</div><div class="pat-sub">${esc(p.idade||'')}</div>${multiBadge(p,ind)}</div></div></td><td><span class="badge" style="background:${m.bg};color:${m.dark}"><i class="ti ${m.icon}"></i>${m.label}</span></td><td><div style="display:flex;flex-direction:column;gap:2px">${pends.slice(0,3).map(pnd=>`<span class="ptag red"><i class="ti ti-alert-circle"></i>${pnd.cod} — ${esc(pnd.t)}</span>`).join('')}${pends.length>3?`<span style="font-size:11px;color:var(--gray-400)">+${pends.length-3} mais</span>`:''}</div></td><td class="cell-muted">${esc(tel(p))}</td><td><button class="row-btn" onclick="showPatient('${ind}','${p.id}')"><i class="ti ti-eye"></i></button></td></tr>`;}).join('');}
@@ -905,6 +1080,7 @@ function memberPendencias(member){
 }
 function renderFamilias(){
   const usingTerritorio=TERRITORIO.length>0;
+  updateOutsideTerritoryCard();
   const familias=getFamilias();
   document.getElementById('fam-total-stat').textContent=familias.length;
   document.getElementById('nb-fam').textContent=familias.length;
@@ -1032,6 +1208,73 @@ function processImportGeral(file){
   };
   reader.readAsText(file,'latin1');
 }
+function getNaoNoTerritorio(){
+  if(!TERRITORIO.length)return[];
+  const territorioKeys=new Set();
+  TERRITORIO.forEach(h=>h.moradores.forEach(m=>{
+    const cpfK=(m.cpf||'').replace(/\D/g,'');
+    const cnsK=(m.cns||'').replace(/\D/g,'');
+    if(cpfK&&cpfK.length>=11)territorioKeys.add('cpf:'+cpfK);
+    if(cnsK&&cnsK.length>=11)territorioKeys.add('cns:'+cnsK);
+    territorioKeys.add('nm:'+m.nome.trim().toLowerCase());
+  }));
+  return GERAL.filter(p=>{
+    const cpfK=(p.cpf||'').replace(/\D/g,'');
+    const cnsK=(p.cns||'').replace(/\D/g,'');
+    const nmK=(p.nome||'').trim().toLowerCase();
+    if(cpfK&&cpfK.length>=11&&territorioKeys.has('cpf:'+cpfK))return false;
+    if(cnsK&&cnsK.length>=11&&territorioKeys.has('cns:'+cnsK))return false;
+    if(territorioKeys.has('nm:'+nmK))return false;
+    return true;
+  });
+}
+function toggleOutsideTerritory(){
+  const card=document.getElementById('outside-territory-card');
+  const body=document.getElementById('outside-territory-body');
+  const isOpen=card.classList.toggle('open');
+  body.style.display=isOpen?'block':'none';
+  if(isOpen)renderOutsideTerritory();
+}
+function renderOutsideTerritory(){
+  const all=getNaoNoTerritorio();
+  const s=(document.getElementById('outside-territory-search').value||'').toLowerCase();
+  const rows=all.filter(p=>!s||p.nome.toLowerCase().includes(s));
+  const tbody=document.getElementById('outside-territory-tbody');
+  if(!rows.length){
+    tbody.innerHTML=`<tr><td colspan="6"><div class="empty"><i class="ti ti-map-pin-check"></i><p>Nenhum resultado.</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML=rows.map(p=>{
+    const endereco=[p.rua,p.numero].filter(x=>x&&x!=='-').join(', ')+(p.bairro&&p.bairro!=='-'?' · '+p.bairro:'');
+    return `<tr>
+      <td><div style="display:flex;align-items:center;gap:8px"><div class="pat-av" style="background:var(--red-l);color:var(--red)">${initials(p.nome)}</div><div class="pat-name">${esc(p.nome)}</div></div></td>
+      <td class="cell-muted">${esc(p.idade||'-')}</td>
+      <td class="cell-muted">${esc(p.sexo||'-')}</td>
+      <td class="cell-muted">${esc(tel(p))}</td>
+      <td class="cell-muted">${p.microarea?'M'+esc(p.microarea):'-'}</td>
+      <td class="cell-muted" style="font-size:11.5px">${esc(endereco||'Endereço não informado')}</td>
+    </tr>`;
+  }).join('');
+}
+function updateOutsideTerritoryCard(){
+  const card=document.getElementById('outside-territory-card');
+  if(!TERRITORIO.length){
+    card.style.display='none';
+    document.getElementById('fam-outside-stat-wrap').style.display='none';
+    return;
+  }
+  const faltantes=getNaoNoTerritorio();
+  document.getElementById('fam-outside-stat-wrap').style.display='block';
+  document.getElementById('fam-outside-stat').textContent=faltantes.length;
+  if(!faltantes.length){
+    card.style.display='none';
+    return;
+  }
+  card.style.display='block';
+  document.getElementById('outside-territory-count').textContent=faltantes.length;
+  document.getElementById('outside-territory-sub').textContent=`${faltantes.length} pessoa(s) sem domicílio cadastrado no Território — podem precisar de atualização cadastral`;
+  if(card.classList.contains('open'))renderOutsideTerritory();
+}
 function processImportTerritorio(file){
   const reader=new FileReader();
   reader.onload=e=>{
@@ -1039,19 +1282,157 @@ function processImportTerritorio(file){
     if(rows===null){toast('Arquivo não reconhecido como planilha de Território.',true);return;}
     if(!rows.length){toast('Nenhum domicílio encontrado no arquivo.',true);return;}
     TERRITORIO=rows;
-    document.getElementById('ires-territorio-txt').textContent=`${rows.length} domicílios/famílias importados.`;
+    const faltantes=getNaoNoTerritorio();
+    document.getElementById('ires-territorio-txt').textContent=`${rows.length} domicílios importados. ${faltantes.length} pessoa(s) da planilha Geral não foram encontradas no Território.`;
     document.getElementById('ires-territorio').classList.add('show');
     updateBadges();
+    updateOutsideTerritoryCard();
     if(currentView==='familias')renderFamilias();
-    toast(`${rows.length} domicílios importados.`);
+    toast(`${rows.length} domicílios importados — ${faltantes.length} pessoa(s) fora do Território.`);
   };
   reader.readAsText(file,'latin1');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// BUSCA GLOBAL — pesquisa unificada no dashboard
+// ══════════════════════════════════════════════════════════════════════════
+function matchesQuery(text, q){
+  return String(text||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q);
+}
+function searchInIndicadores(q){
+  const out=[];
+  Object.entries(DB).forEach(([ind,arr])=>{
+    arr.forEach(p=>{
+      if(matchesQuery(p.nome,q)||matchesQuery(p.cpf,q)||matchesQuery(p.cns,q)){
+        const pends=getPend(ind,p);
+        out.push({type:'ind',ind,p,pends});
+      }
+    });
+  });
+  return out;
+}
+function searchInNaoVinculados(q){
+  return getNaoVinculados().filter(p=>matchesQuery(p.nome,q)||matchesQuery(p.cpf,q)||matchesQuery(p.cns,q)).map(p=>({type:'nv',p}));
+}
+function searchInBolsaFamilia(q){
+  return getBolsaFamiliaBeneficiarios().filter(p=>matchesQuery(p.nome,q)||matchesQuery(p.cpf,q)||matchesQuery(p.cns,q)).map(p=>({type:'bf',p}));
+}
+function searchInFamilias(q){
+  const out=[];
+  getFamilias().forEach(f=>{
+    if(matchesQuery(f.label,q)){ out.push({type:'fam-addr',f}); return; }
+    f.members.forEach(m=>{
+      if(matchesQuery(m.nome,q)||matchesQuery(m.cpf,q)||matchesQuery(m.cns,q)) out.push({type:'fam-member',f,member:m});
+    });
+  });
+  return out;
+}
+function renderGlobalSearch(){
+  const raw=document.getElementById('gsearch-input').value||'';
+  const q=raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  const clearBtn=document.getElementById('gsearch-clear');
+  clearBtn.classList.toggle('show',raw.length>0);
+  const box=document.getElementById('gsearch-results');
+  if(q.length<2){ box.classList.remove('show'); box.innerHTML=''; return; }
+
+  const resInd=searchInIndicadores(q).slice(0,8);
+  const resNv=searchInNaoVinculados(q).slice(0,5);
+  const resBf=searchInBolsaFamilia(q).slice(0,5);
+  const resFam=searchInFamilias(q).slice(0,6);
+
+  const total=resInd.length+resNv.length+resBf.length+resFam.length;
+  if(!total){
+    box.innerHTML=`<div class="gsearch-empty"><i class="ti ti-mood-empty"></i>Nenhum resultado para "${esc(raw)}"</div>`;
+    box.classList.add('show');
+    return;
+  }
+
+  let html='';
+  if(resInd.length){
+    html+=`<div class="gsearch-section"><div class="gsearch-section-lbl">Indicadores de saúde</div>`;
+    html+=resInd.map(({ind,p,pends})=>{
+      const m=IND_META[ind];
+      const critN=pends.filter(x=>x.s==='red').length;
+      const sit=pends.length===0?`<span class="badge badge-green" style="font-size:10px"><i class="ti ti-circle-check"></i>Em dia</span>`:critN>0?`<span class="badge badge-red" style="font-size:10px">${critN} crítica${critN>1?'s':''}</span>`:`<span class="badge badge-amber" style="font-size:10px">${pends.length} atenção</span>`;
+      return `<div class="gsearch-item" onclick="closeGlobalSearchAnd(()=>showPatient('${ind}','${p.id}'))">
+        <div class="pat-av" style="background:${m.bg};color:${m.dark}">${initials(p.nome)}</div>
+        <div class="gsearch-item-info"><div class="gsearch-item-name">${esc(p.nome)}</div>
+          <div class="gsearch-item-meta"><span class="badge" style="background:${m.bg};color:${m.dark};font-size:10px"><i class="ti ${m.icon}"></i>${m.label}</span>${sit}</div>
+        </div>
+      </div>`;
+    }).join('');
+    html+=`</div>`;
+  }
+  if(resBf.length){
+    html+=`<div class="gsearch-section gsearch-divider"><div class="gsearch-section-lbl">Bolsa Família</div>`;
+    html+=resBf.map(({p})=>{
+      const conds=bfCondicionalidades(p);
+      const hasPend=conds.some(c=>c.status==='crit');
+      return `<div class="gsearch-item" onclick="closeGlobalSearchAnd(()=>goView('bolsafamilia'))">
+        <div class="pat-av" style="background:#D4EFDF;color:#1E8449">${initials(p.nome)}</div>
+        <div class="gsearch-item-info"><div class="gsearch-item-name">${esc(p.nome)}</div>
+          <div class="gsearch-item-meta"><span class="bf-badge"><i class="ti ti-hand-heart"></i>Bolsa Família</span>${hasPend?'<span class="badge badge-red" style="font-size:10px">Condicionalidade pendente</span>':'<span class="badge badge-green" style="font-size:10px">Em dia</span>'}</div>
+        </div>
+      </div>`;
+    }).join('');
+    html+=`</div>`;
+  }
+  if(resFam.length){
+    html+=`<div class="gsearch-section gsearch-divider"><div class="gsearch-section-lbl">Famílias / domicílios</div>`;
+    html+=resFam.map(r=>{
+      if(r.type==='fam-addr'){
+        return `<div class="gsearch-item" onclick="closeGlobalSearchAnd(()=>goView('familias'))">
+          <div class="house-ico" style="width:32px;height:32px;font-size:15px"><i class="ti ti-home"></i></div>
+          <div class="gsearch-item-info"><div class="gsearch-item-name">${esc(r.f.label)}</div>
+            <div class="gsearch-item-meta">${r.f.members.length} morador(es)</div>
+          </div>
+        </div>`;
+      }
+      return `<div class="gsearch-item" onclick="closeGlobalSearchAnd(()=>goView('familias'))">
+        <div class="pat-av" style="background:#D1F2EB;color:#117864">${initials(r.member.nome)}</div>
+        <div class="gsearch-item-info"><div class="gsearch-item-name">${esc(r.member.nome)}</div>
+          <div class="gsearch-item-meta"><i class="ti ti-map-pin" style="font-size:11px"></i>${esc(r.f.label)}</div>
+        </div>
+      </div>`;
+    }).join('');
+    html+=`</div>`;
+  }
+  if(resNv.length){
+    html+=`<div class="gsearch-section gsearch-divider"><div class="gsearch-section-lbl">Não vinculados a indicadores</div>`;
+    html+=resNv.map(({p})=>{
+      return `<div class="gsearch-item" onclick="closeGlobalSearchAnd(()=>goView('naovinculados'))">
+        <div class="pat-av" style="background:#EAECEE;color:#5D6D7E">${initials(p.nome)}</div>
+        <div class="gsearch-item-info"><div class="gsearch-item-name">${esc(p.nome)}</div>
+          <div class="gsearch-item-meta">${esc(p.idade||'')} · <span class="badge badge-gray" style="font-size:10px">Sem indicador vinculado</span></div>
+        </div>
+      </div>`;
+    }).join('');
+    html+=`</div>`;
+  }
+  box.innerHTML=html;
+  box.classList.add('show');
+}
+function closeGlobalSearchAnd(fn){
+  document.getElementById('gsearch-results').classList.remove('show');
+  fn();
+}
+function clearGlobalSearch(){
+  document.getElementById('gsearch-input').value='';
+  document.getElementById('gsearch-clear').classList.remove('show');
+  document.getElementById('gsearch-results').classList.remove('show');
+  document.getElementById('gsearch-results').innerHTML='';
 }
 
 function openM(id){document.getElementById(id).classList.add('open');}
 function closeM(id){document.getElementById(id).classList.remove('open');}
 function toast(msg,err=false){const t=document.getElementById('toast');document.getElementById('toast-msg').textContent=msg;t.classList.toggle('err',err);t.querySelector('i').className='ti ti-'+(err?'alert-circle':'circle-check');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
-document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.moverlay').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('open')}));const file=document.getElementById('ifile');file.addEventListener('change',function(){if(this.files[0])processImport(this.files[0]);this.value='';});const idrop=document.getElementById('idrop');idrop.addEventListener('dragover',e=>{e.preventDefault();idrop.classList.add('drag')});idrop.addEventListener('dragleave',()=>idrop.classList.remove('drag'));idrop.addEventListener('drop',e=>{e.preventDefault();idrop.classList.remove('drag');if(e.dataTransfer.files[0])processImport(e.dataTransfer.files[0]);});
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.moverlay').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('open')}));
+document.addEventListener('click',e=>{
+  const wrap=document.getElementById('gsearch-input');
+  const box=document.getElementById('gsearch-results');
+  if(wrap&&box&&!wrap.contains(e.target)&&!box.contains(e.target)) box.classList.remove('show');
+});
+const file=document.getElementById('ifile');file.addEventListener('change',function(){if(this.files[0])processImport(this.files[0]);this.value='';});const idrop=document.getElementById('idrop');idrop.addEventListener('dragover',e=>{e.preventDefault();idrop.classList.add('drag')});idrop.addEventListener('dragleave',()=>idrop.classList.remove('drag'));idrop.addEventListener('drop',e=>{e.preventDefault();idrop.classList.remove('drag');if(e.dataTransfer.files[0])processImport(e.dataTransfer.files[0]);});
 
 const fileGeral=document.getElementById('ifile-geral');fileGeral.addEventListener('change',function(){if(this.files[0])processImportGeral(this.files[0]);this.value='';});const idropGeral=document.getElementById('idrop-geral');idropGeral.addEventListener('dragover',e=>{e.preventDefault();idropGeral.classList.add('drag')});idropGeral.addEventListener('dragleave',()=>idropGeral.classList.remove('drag'));idropGeral.addEventListener('drop',e=>{e.preventDefault();idropGeral.classList.remove('drag');if(e.dataTransfer.files[0])processImportGeral(e.dataTransfer.files[0]);});
 
@@ -1061,7 +1442,7 @@ try{const r=localStorage.getItem('apscare_db');if(r){const s=JSON.parse(r);Objec
 try{const rg=localStorage.getItem('apscare_geral');if(rg)GERAL=JSON.parse(rg)||[];}catch(e){console.warn(e);}
 try{const rt=localStorage.getItem('apscare_territorio');if(rt)TERRITORIO=JSON.parse(rt)||[];}catch(e){console.warn(e);}
 updateBadges();renderDashboard();});
-Object.assign(window,{goView,goInd,openImport,openExport,exportSelected,openAdd,openEdit,savePatient,closeM,doExport,saveLocal,loadLocal,showPatient,delPat,renderInd,clearPendFilters,switchMTab,openClearData,confirmClearData,openImportGeral,openImportTerritorio,renderNaoVinculados,renderBolsaFamilia,renderFamilias,toggleHouse,promptIndForUnlinked});
+Object.assign(window,{goView,goInd,openImport,openExport,exportSelected,openAdd,openEdit,savePatient,closeM,doExport,saveLocal,loadLocal,showPatient,delPat,renderInd,clearPendFilters,switchMTab,openClearData,confirmClearData,openImportGeral,openImportTerritorio,renderNaoVinculados,renderBolsaFamilia,renderFamilias,toggleHouse,promptIndForUnlinked,renderGlobalSearch,clearGlobalSearch,closeGlobalSearchAnd,toggleOutsideTerritory,renderOutsideTerritory});
 </script>
 </body>
 </html>
