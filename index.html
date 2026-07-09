@@ -599,9 +599,11 @@ a{text-decoration:none;color:inherit}
 // arquivo supabase-schema.sql e o LEIA-ME-NUVEM.md para o passo a passo).
 // Enquanto estiver com os valores de exemplo abaixo, o app funciona sem
 // login, exatamente como antes (localStorage / arquivo local no Electron).
+// Isso controla só o LOGIN — os dados de pacientes continuam sempre na
+// máquina, nunca vão para o Supabase.
 // ══════════════════════════════════════════════════════════════════════════
-const SUPABASE_URL = 'COLE_AQUI_A_URL_DO_SEU_PROJETO_SUPABASE';
-const SUPABASE_ANON_KEY = 'COLE_AQUI_A_CHAVE_ANON_PUBLICA';
+const SUPABASE_URL = guouuyfayqxbifxojxys.supabase.co;
+const SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1b3V1eWZheXF4YmlmeG9qeHlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1NDkxNDMsImV4cCI6MjA5OTEyNTE0M30.VmcB-OGLbCWmdgWSi9WMi5CnDl9UCd5s-lKK0kD21-w;
 let supabaseClient = null;
 let currentMunicipioId = null;
 let currentUserEmail = null;
@@ -867,7 +869,9 @@ function renderUnifiedImportSummary(summaries){
 // ══════════════════════════════════════════════════════════════════════════
 // LOGIN / AUTENTICAÇÃO — só entra em ação quando SUPABASE_URL/ANON_KEY estão
 // configurados (cloudEnabled()). Sem isso, o app abre direto, sem tela de
-// login, exatamente como antes.
+// login, exatamente como antes. Tudo aqui é defensivo: se algo falhar (rede
+// fora do ar, CDN bloqueado, etc.) o app cai para o modo local em vez de
+// ficar travado na tela de carregamento.
 // ══════════════════════════════════════════════════════════════════════════
 function showLogin(){document.getElementById('login-screen').classList.add('show');document.getElementById('app-root').style.display='none';document.getElementById('app-loading').classList.remove('show');}
 function hideLogin(){document.getElementById('login-screen').classList.remove('show');}
@@ -881,53 +885,75 @@ async function doLogin(){
   clearLoginError();
   if(!email||!senha){showLoginError('Preencha e-mail e senha.');return;}
   const btn=document.getElementById('login-btn');btn.disabled=true;
-  const sb=initSupabase();
-  const{error}=await sb.auth.signInWithPassword({email,password:senha});
-  btn.disabled=false;
-  if(error){showLoginError('E-mail ou senha incorretos.');return;}
-  // onAuthStateChange cuida do resto (carregar perfil, dados, mostrar o app)
+  try{
+    const sb=initSupabase();
+    if(!sb){showLoginError('Não foi possível conectar ao serviço de login. Verifique sua internet e tente de novo.');btn.disabled=false;return;}
+    const{error}=await sb.auth.signInWithPassword({email,password:senha});
+    btn.disabled=false;
+    if(error){showLoginError('E-mail ou senha incorretos.');return;}
+    // onAuthStateChange cuida do resto (carregar perfil, dados, mostrar o app)
+  }catch(e){
+    btn.disabled=false;
+    showLoginError('Erro ao tentar entrar: '+e.message+'. Verifique sua internet e tente de novo.');
+  }
 }
 async function doLogout(){
-  const sb=initSupabase();
-  if(sb)await sb.auth.signOut();
+  try{const sb=initSupabase();if(sb)await sb.auth.signOut();}catch(e){/* segue o baile mesmo se der erro no signOut */}
   Object.keys(DB).forEach(k=>{DB[k]=[];});
   GERAL=[];TERRITORIO=[];
   currentMunicipioId=null;currentUserEmail=null;
-  document.getElementById('login-email').value='';
-  document.getElementById('login-senha').value='';
+  const le=document.getElementById('login-email');if(le)le.value='';
+  const ls=document.getElementById('login-senha');if(ls)ls.value='';
   showLogin();
 }
 async function onLoggedIn(session){
   showLoading();
   currentUserEmail=session.user.email;
-  const sb=initSupabase();
-  const{data:perfil,error}=await sb.from('perfis').select('municipio_id,municipios(nome)').eq('id',session.user.id).maybeSingle();
-  if(error||!perfil){
-    showLoginError('Esta conta ainda não está vinculada a nenhum município. Fale com quem forneceu o sistema.');
-    await sb.auth.signOut();
-    document.getElementById('app-loading').classList.remove('show');
-    showLogin();
-    return;
+  try{
+    const sb=initSupabase();
+    const{data:perfil,error}=await sb.from('perfis').select('municipio_id,municipios(nome)').eq('id',session.user.id).maybeSingle();
+    if(error||!perfil){
+      showLoginError('Esta conta ainda não está vinculada a nenhum município. Fale com quem forneceu o sistema.');
+      try{await sb.auth.signOut();}catch(e){}
+      document.getElementById('app-loading').classList.remove('show');
+      showLogin();
+      return;
+    }
+    currentMunicipioId=perfil.municipio_id;
+    const uc=document.getElementById('user-card');if(uc)uc.style.display='flex';
+    const uce=document.getElementById('user-card-email');if(uce)uce.textContent=currentUserEmail;
+    if(perfil.municipios&&perfil.municipios.nome)document.getElementById('eq-display').textContent=perfil.municipios.nome;
+  }catch(e){
+    // se der qualquer erro ao buscar o perfil (rede caiu no meio do caminho, etc.),
+    // não deixa o usuário travado — segue com o app em modo local mesmo assim.
+    console.warn('Erro ao carregar perfil:',e);
   }
-  currentMunicipioId=perfil.municipio_id;
-  const uc=document.getElementById('user-card');if(uc)uc.style.display='flex';
-  const uce=document.getElementById('user-card-email');if(uce)uce.textContent=currentUserEmail;
-  if(perfil.municipios&&perfil.municipios.nome)document.getElementById('eq-display').textContent=perfil.municipios.nome;
   hideLogin();
   await bootLoadData();
   showAppRoot();
 }
 async function tryRestoreSession(){
-  if(!cloudEnabled()){showAppRoot();bootLoadData();return;}
-  const sb=initSupabase();
-  showLoading();
-  const{data:{session}}=await sb.auth.getSession();
-  if(session)await onLoggedIn(session);
-  else{document.getElementById('app-loading').classList.remove('show');showLogin();}
-  sb.auth.onAuthStateChange((event,newSession)=>{
-    if(event==='SIGNED_IN'&&newSession&&!currentMunicipioId)onLoggedIn(newSession);
-    if(event==='SIGNED_OUT'){currentMunicipioId=null;showLogin();}
-  });
+  // rede de segurança: nunca deixa a tela de carregamento presa pra sempre
+  const safety=setTimeout(()=>{showAppRoot();bootLoadData();},8000);
+  try{
+    if(!cloudEnabled()){clearTimeout(safety);showAppRoot();await bootLoadData();return;}
+    const sb=initSupabase();
+    if(!sb){clearTimeout(safety);showAppRoot();await bootLoadData();return;}
+    showLoading();
+    const{data:{session}}=await sb.auth.getSession();
+    clearTimeout(safety);
+    if(session)await onLoggedIn(session);
+    else{document.getElementById('app-loading').classList.remove('show');showLogin();}
+    sb.auth.onAuthStateChange((event,newSession)=>{
+      if(event==='SIGNED_IN'&&newSession&&!currentMunicipioId)onLoggedIn(newSession);
+      if(event==='SIGNED_OUT'){currentMunicipioId=null;showLogin();}
+    });
+  }catch(e){
+    clearTimeout(safety);
+    console.warn('Erro ao iniciar login, seguindo em modo local:',e);
+    showAppRoot();
+    await bootLoadData();
+  }
 }
 // ══════════════════════════════════════════════════════════════════════════
 // PERSISTÊNCIA — arquivo local de verdade quando rodando no app (Electron via
@@ -954,8 +980,6 @@ function rerenderAfterLoad(){
 }
 function saveLocal(show=true){
   const payload=getPersistPayload();
-  // os dados dos pacientes ficam sempre só na máquina (arquivo local no Electron,
-  // ou localStorage no navegador) — a nuvem/Supabase cuida apenas do login.
   if(window.marquiAPI){
     window.marquiAPI.saveData(payload).then(()=>{if(show)toast('Dados salvos!');}).catch(e=>toast('Erro ao salvar: '+e.message,true));
     return;
