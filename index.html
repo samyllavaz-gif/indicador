@@ -954,14 +954,8 @@ function rerenderAfterLoad(){
 }
 function saveLocal(show=true){
   const payload=getPersistPayload();
-  if(cloudEnabled()&&currentMunicipioId){
-    const sb=initSupabase();
-    sb.from('dados_app').upsert({municipio_id:currentMunicipioId,payload,atualizado_em:new Date().toISOString()}).then(({error})=>{
-      if(error)toast('Erro ao salvar na nuvem: '+error.message,true);
-      else if(show)toast('Dados salvos na nuvem!');
-    });
-    return;
-  }
+  // os dados dos pacientes ficam sempre só na máquina (arquivo local no Electron,
+  // ou localStorage no navegador) — a nuvem/Supabase cuida apenas do login.
   if(window.marquiAPI){
     window.marquiAPI.saveData(payload).then(()=>{if(show)toast('Dados salvos!');}).catch(e=>toast('Erro ao salvar: '+e.message,true));
     return;
@@ -975,17 +969,6 @@ function saveLocal(show=true){
   }catch(e){toast('Erro ao salvar: '+e.message,true);}
 }
 function loadLocal(){
-  if(cloudEnabled()&&currentMunicipioId){
-    const sb=initSupabase();
-    sb.from('dados_app').select('payload').eq('municipio_id',currentMunicipioId).maybeSingle().then(({data,error})=>{
-      if(error){toast('Erro ao carregar da nuvem: '+error.message,true);return;}
-      if(!data){toast('Nenhum dado salvo encontrado na nuvem.',true);return;}
-      applyLoadedPayload(data.payload);
-      rerenderAfterLoad();
-      toast('Dados carregados da nuvem!');
-    });
-    return;
-  }
   if(window.marquiAPI){
     window.marquiAPI.loadData().then(saved=>{
       if(!saved){toast('Nenhum dado salvo encontrado.',true);return;}
@@ -1008,11 +991,7 @@ function loadLocal(){
 }
 async function bootLoadData(){
   try{
-    if(cloudEnabled()&&currentMunicipioId){
-      const sb=initSupabase();
-      const{data,error}=await sb.from('dados_app').select('payload').eq('municipio_id',currentMunicipioId).maybeSingle();
-      if(!error&&data)applyLoadedPayload(data.payload);
-    }else if(window.marquiAPI){
+    if(window.marquiAPI){
       const saved=await window.marquiAPI.loadData();
       if(saved)applyLoadedPayload(saved);
     }else{
@@ -1780,12 +1759,12 @@ document.addEventListener('click',e=>{
 });
 const fileUnified=document.getElementById('ifile-unified');fileUnified.addEventListener('change',function(){if(this.files.length)processUnifiedFiles(this.files);this.value='';});const idropUnified=document.getElementById('idrop-unified');idropUnified.addEventListener('dragover',e=>{e.preventDefault();idropUnified.classList.add('drag')});idropUnified.addEventListener('dragleave',()=>idropUnified.classList.remove('drag'));idropUnified.addEventListener('drop',e=>{e.preventDefault();idropUnified.classList.remove('drag');if(e.dataTransfer.files.length)processUnifiedFiles(e.dataTransfer.files);});
 
-bootLoadData();
+tryRestoreSession();
 // salvamento automático: além do save imediato após cada ação, garante persistência ao fechar/atualizar a aba
 window.addEventListener('beforeunload',()=>{try{saveLocal(false);}catch(e){}});
 setInterval(()=>{try{saveLocal(false);}catch(e){}},30000);
 });
-Object.assign(window,{goView,goInd,openImport,openImportUnified,processUnifiedFiles,openExport,exportSelected,openAdd,openEdit,savePatient,closeM,doExport,saveLocal,loadLocal,showPatient,delPat,renderInd,clearPendFilters,switchMTab,openClearData,confirmClearData,openImportGeral,openImportTerritorio,renderNaoVinculados,renderBolsaFamilia,renderFamilias,toggleHouse,promptIndForUnlinked,renderGlobalSearch,clearGlobalSearch,closeGlobalSearchAnd,toggleOutsideTerritory,renderOutsideTerritory,renderCrossSearch,buildCrossIndCheckboxes});
+Object.assign(window,{goView,goInd,openImport,openImportUnified,processUnifiedFiles,openExport,exportSelected,openAdd,openEdit,savePatient,closeM,doExport,saveLocal,loadLocal,showPatient,delPat,renderInd,clearPendFilters,switchMTab,openClearData,confirmClearData,openImportGeral,openImportTerritorio,renderNaoVinculados,renderBolsaFamilia,renderFamilias,toggleHouse,promptIndForUnlinked,renderGlobalSearch,clearGlobalSearch,closeGlobalSearchAnd,toggleOutsideTerritory,renderOutsideTerritory,renderCrossSearch,buildCrossIndCheckboxes,doLogin,doLogout});
 </script>
 </body>
 </html>
