@@ -2349,6 +2349,15 @@ window.addEventListener('beforeunload',()=>{try{saveLocal(false);}catch(e){}});
 setInterval(()=>{try{saveLocal(false);}catch(e){}},30000);
 });
 Object.assign(window,{goView,goInd,openImport,openImportUnified,processUnifiedFiles,openExport,exportSelected,openAdd,openEdit,savePatient,closeM,doExport,saveLocal,loadLocal,showPatient,delPat,renderInd,clearPendFilters,switchMTab,openClearData,confirmClearData,openImportGeral,openImportTerritorio,renderNaoVinculados,renderBolsaFamilia,renderFamilias,toggleHouse,promptIndForUnlinked,renderGlobalSearch,clearGlobalSearch,closeGlobalSearchAnd,toggleOutsideTerritory,renderOutsideTerritory,renderCrossSearch,buildCrossIndCheckboxes,openImportCVAT,processCVATFile,renderACS});
+
+(function(){
+  var params = new URLSearchParams(location.search);
+  var ind = params.get('ind'), view = params.get('view');
+  setTimeout(function(){
+    if (ind && typeof goInd === 'function') goInd(ind);
+    else if (view && typeof goView === 'function') goView(view);
+  }, 80);
+})();
 </script>
 </body>
 </html>
