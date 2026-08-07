@@ -11,44 +11,60 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --brand:#9C2963;--brand-light:#FDEDF4;--brand-mid:#D6487F;--sidebar-bg:#3A1830;
-  --red:#C0392B;--red-l:#FBEAEA;--red-m:#E74C3C;
-  --amber:#B7770D;--amber-l:#FEF9EC;--amber-m:#D4AC0D;
-  --green:#1A7A4A;--green-l:#EAF5EF;--green-m:#27AE60;
-  --purple:#6C3483;--purple-l:#F5EEF8;
-  --teal:#0E6655;--teal-l:#E8F8F5;
-  --orange:#BA4A00;--orange-l:#FDEBD0;
-  --gray-50:#F8F7F5;--gray-100:#F0EEE9;--gray-200:#DDD9D0;
-  --gray-400:#A09B90;--gray-600:#6B6560;--gray-800:#2C2825;
-  --white:#fff;
-  --font-d:'DM Serif Display',Georgia,serif;
-  --font-b:'DM Sans',system-ui,sans-serif;
-  --r-sm:6px;--r-md:10px;--r-lg:16px;--r-xl:24px;
-  --sh-sm:0 1px 3px rgba(44,40,37,.08),0 1px 2px rgba(44,40,37,.04);
-  --sh-md:0 4px 12px rgba(44,40,37,.10),0 2px 4px rgba(44,40,37,.06);
-  --sh-lg:0 12px 32px rgba(44,40,37,.12),0 4px 8px rgba(44,40,37,.06);
+:root {
+  /* Marca e Estrutura: Minimalista e Corporativo */
+  --brand: #B35A24;         /* Laranja queimado (Principal) */
+  --brand-mid: #D97736;     /* Laranja queimado (Secundário) */
+  --brand-light: #FCECE3;   /* Fundo de destaque suave */
+  
+  --sidebar-bg: #FAF9F6;    /* Off-white para a barra lateral */
+  --gray-50: #FDFCFB;       /* Fundo principal quase branco */
+  --gray-100: #F4F1EA;      /* Bege bem claro para bordas/fundos sutis */
+  --gray-200: #E6E1D6;      /* Bege médio para linhas divisórias */
+  --gray-400: #A8A196;      /* Cinza quente para textos secundários */
+  --gray-600: #6B655B;      /* Cinza escuro para textos corridos */
+  --gray-800: #332F2A;      /* Cinza quase preto para títulos */
+  --white: #ffffff;
+
+  /* Cores de Feedback (suavizadas para combinar com a estética moderna) */
+  --red: #C0392B; --red-l: #FDF2F1; --red-m: #E74C3C;
+  --amber: #B7770D; --amber-l: #FEF9EC; --amber-m: #D4AC0D;
+  --green: #1A7A4A; --green-l: #F1F9F5; --green-m: #27AE60;
+  --purple: #6C3483; --purple-l: #FBF8FC;
+  --teal: #0E6655; --teal-l: #F2FBFA;
+  --orange: #BA4A00; --orange-l: #FDF6F0;
+
+  /* Fontes e Bordas */
+  --font-d: 'DM Serif Display', Georgia, serif;
+  --font-b: 'DM Sans', system-ui, sans-serif;
+  --r-sm: 4px; --r-md: 8px; --r-lg: 12px; --r-xl: 20px;
+  
+  /* Sombras mais suaves e elegantes */
+  --sh-sm: 0 1px 2px rgba(51, 47, 42, 0.04), 0 2px 4px rgba(51, 47, 42, 0.02);
+  --sh-md: 0 4px 8px rgba(51, 47, 42, 0.06), 0 2px 4px rgba(51, 47, 42, 0.04);
+  --sh-lg: 0 12px 24px rgba(51, 47, 42, 0.08), 0 4px 8px rgba(51, 47, 42, 0.04);
 }
+
 html{font-size:16px;-webkit-font-smoothing:antialiased}
 body{font-family:var(--font-b);background:var(--gray-50);color:var(--gray-800);min-height:100vh}
 h1,h2,h3,h4{font-family:var(--font-d);font-weight:400}
 button,input,select,textarea{font-family:var(--font-b)}
 a{text-decoration:none;color:inherit}
 .app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-.sidebar{background:var(--sidebar-bg);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:hidden}
-.sb-brand{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:3px}
-.sb-icon{width:36px;height:36px;border-radius:10px;background:var(--brand-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sb-icon i{font-size:20px;color:white}.sb-name{font-family:var(--font-d);font-size:22px;color:white}
-.sb-sub{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.06em;text-transform:uppercase;padding-left:46px}
-.sb-nav{padding:12px 10px;flex:1;overflow-y:auto}.sb-nav::-webkit-scrollbar{width:4px}.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
-.nav-lbl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);padding:10px 10px 5px;margin-top:4px}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r-md);font-size:13px;color:rgba(255,255,255,.5);transition:all .15s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
-.nav-item i{font-size:17px;flex-shrink:0}.nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85)}.nav-item.active{color:white;font-weight:500}
-.nav-item.ind-g.active{background:#1A5276}.nav-item.ind-i.active{background:#1E8449}.nav-item.ind-d.active{background:#7D6608}.nav-item.ind-h.active{background:#922B21}.nav-item.ind-o.active{background:#4A235A}.nav-item.ind-m.active{background:#0E6655}.nav-item.ind-sb.active{background:#8A3800}.nav-item.dash.active{background:var(--brand-mid)}
-.nav-item.help.active{background:#6C3483}
-.nav-item.explain.active{background:#B7770D}
-.nav-item.danger{color:#f5b4ac}.nav-item.danger:hover{background:rgba(231,76,60,.16);color:#fca5a5}
+/* Configuração da Barra Lateral Minimalista */
+.sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--gray-200); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.sb-brand { padding: 22px 20px 16px; border-bottom: 1px solid var(--gray-200); }
+.sb-name { font-family: var(--font-d); font-size: 22px; color: var(--gray-800); }
+.sb-sub { font-size: 10px; color: var(--gray-400); letter-spacing: .06em; text-transform: uppercase; padding-left: 46px; }
+.nav-lbl { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--gray-400); padding: 10px 10px 5px; margin-top: 4px; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: var(--r-md); font-size: 13px; color: var(--gray-600); transition: all .15s; cursor: pointer; border: none; background: none; width: 100%; text-align: left; }
+.nav-item i { font-size: 17px; flex-shrink: 0; }
+.nav-item:hover { background: var(--gray-100); color: var(--gray-800); }
+
+/* Estado ativo simplificado e focado na cor da marca */
+.nav-item.active { background: var(--brand-light); color: var(--brand); font-weight: 500; }
+.nav-item.danger { color: var(--red); }
+.nav-item.danger:hover { background: var(--red-l); }
 .nv-badge{margin-left:auto;font-size:10px;font-weight:600;border-radius:20px;padding:1px 7px;min-width:18px;text-align:center}.nv-badge.red{background:var(--red-m);color:white}.nv-badge.gray{background:rgba(255,255,255,.12);color:rgba(255,255,255,.6)}
 .sb-footer{padding:12px 10px;border-top:1px solid rgba(255,255,255,.08)}.eq-card{background:rgba(255,255,255,.06);border-radius:var(--r-md);padding:10px 12px}.eq-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}.eq-name{font-size:12px;color:rgba(255,255,255,.65);line-height:1.4}
 .topbar{background:var(--white);border-bottom:1px solid var(--gray-100);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh-sm)}
@@ -230,6 +246,70 @@ a{text-decoration:none;color:inherit}
   .intv-print-hdr{display:block;margin-bottom:14px}
   .intv-print-hdr h2{font-family:var(--font-d);font-size:20px}
   .intv-print-hdr div{font-size:11.5px;color:#555;margin-top:2px}
+}
+/* ── ESTÉTICA PAPER CUTOUT / COLAGEM MODERNA ── */
+
+/* Cartões Principais, Tabelas e Painéis (Efeito de camadas de papel) */
+.stat-card, .tbl-card, .cross-card, .dcard, .ind-header, .help-card, .pat-hdr, .house-card {
+  background: var(--white);
+  border: 2px solid var(--gray-800) !important; /* Contorno nítido */
+  border-radius: var(--r-lg);
+  box-shadow: 5px 5px 0px var(--gray-200) !important; /* Sombra sólida, sem desfoque */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Interação de destaque: ao passar o mouse, a carta "levanta" e a sombra muda para o laranja queimado */
+.stat-card:hover, .help-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px var(--brand-mid) !important; 
+}
+
+/* Ícones com aspecto de peças sobrepostas (toque de colagem) */
+.sc-icon, .ind-icon, .help-card-ico, .house-ico {
+  border: 1.5px solid var(--gray-800);
+  box-shadow: 2px 2px 0px var(--gray-800);
+  border-radius: var(--r-md);
+  transform: rotate(-3deg); /* Leve inclinação artesanal */
+  transition: transform 0.2s;
+}
+
+/* Endireita o ícone quando o mouse passa por cima */
+.stat-card:hover .sc-icon {
+  transform: rotate(0deg) scale(1.05);
+}
+
+/* Botões Principais no mesmo estilo de recorte */
+.btn-primary {
+  background: var(--brand);
+  color: white;
+  border: 1.5px solid var(--gray-800) !important;
+  box-shadow: 3px 3px 0px var(--gray-800) !important;
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background: var(--brand-mid);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--gray-800) !important;
+}
+
+/* Botões Secundários */
+.btn-outline {
+  border: 1.5px solid var(--gray-800) !important;
+  box-shadow: 2px 2px 0px var(--gray-200) !important;
+  font-weight: 600;
+}
+.btn-outline:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--gray-400) !important;
+}
+
+/* Linhas das tabelas com maior definição */
+thead {
+  background: var(--gray-100);
+  border-bottom: 2px solid var(--gray-800);
+}
+td {
+  border-bottom: 1px solid var(--gray-200);
 }
 </style>
 </head>
